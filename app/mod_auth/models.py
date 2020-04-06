@@ -8,33 +8,34 @@ class Base(db.Model):
     __abstract__  = True
 
     id            = db.Column(db.Integer, primary_key=True)
-    date_created  = db.Column(db.DateTime,  default=db.func.current_timestamp())
+    dateOfJoining  = db.Column(db.DateTime,  default=db.func.current_timestamp())
     date_modified = db.Column(db.DateTime,  default=db.func.current_timestamp(),
                                            onupdate=db.func.current_timestamp())
 
 # Define a User model
 class User(Base):
 
-    __tablename__ = 'auth_user'
+    __tablename__ = 'userInfo'
 
     # User Name
-    name    = db.Column(db.String(128),  nullable=False)
+    name    = db.Column(db.String(100),  nullable=False)
 
     # Identification Data: email & password
-    email    = db.Column(db.String(128),  nullable=False,
+    emailID    = db.Column(db.String(100),  nullable=False,
                                             unique=True)
-    password = db.Column(db.String(192),  nullable=False)
+    password = db.Column(db.String(200),  nullable=False)
 
     # Authorisation Data: role & status
-    role     = db.Column(db.SmallInteger, nullable=False)
-    status   = db.Column(db.SmallInteger, nullable=False)
+    role     = db.Column(db.SmallInteger, nullable=False)   # 0 - customer, 1 - Owner, 2 - Manager, 3 - Gardener
+    # status   = db.Column(db.SmallInteger, nullable=False)   # yet to be decided
 
     # New instance instantiation procedure
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password, role):
 
         self.name     = name
-        self.email    = email
+        self.emailID   = email
         self.password = password
+        self.role = role
 
     def __repr__(self):
-        return '<User %r>' % (self.name)                        
+        return '<User {name} id-{id}>'.format(name = self.name, id = self.id)                        

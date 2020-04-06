@@ -1,3 +1,7 @@
+#only for local machine testing, to protect my passwords
+from secret import name, password
+
+
 # Statement for enabling the development environment
 DEBUG = True
 
@@ -5,9 +9,9 @@ DEBUG = True
 import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))  
 
-# Define the database - we are working with
-# SQLite for this example
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
+# Define the database
+# CHANGE THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSsss
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{name}:{password}@localhost/nursery_management'.format(name = name, password = password)
 DATABASE_CONNECT_OPTIONS = {}
 
 # Application threads. A common general assumption is
