@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{# This is templates/signup.html #}
+{% extends 'base.html' %}
+{% set active_page = 'signup' %}
+
+{% block title %}
+    Signup
+{% endblock %}
+
+{% block content %}
     <form method="POST" action=".">
         <label for="fname">name:</label><br>
         <input type="text" id="name" name="name" required><br>
@@ -22,6 +23,5 @@
 
         <button type="submit" name="submit">Sign in</button>
     </form>
-    
-</body>
-</html>
+
+{% endblock %}

@@ -1,3 +1,8 @@
+{# This is template/auth/signin.html #}
+{% extends 'base.html' %}
+{% set active_page = 'signin' %}
+
+<!-- change these!! they are temporary! -->
 {% macro render_field(field, placeholder=None) %}
 {% if field.errors %}
 <div>
@@ -11,6 +16,13 @@
 </div>
 {% endmacro %}
 
+<!-- Title -->
+{% block title %}
+  Signin
+{% endblock %}
+
+<!-- Body -->
+{% block content %}
 <div>
   <div>
     <legend>Sign in</legend>
@@ -48,3 +60,4 @@
     </form>  
   </div>
 </div>
+{% endblock %}

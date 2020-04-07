@@ -1,6 +1,8 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
-                  flash, g, session, redirect, url_for
+                  flash, g, session, redirect, url_for, abort
+
+from markupsafe import escape
 
 # Import password / encryption helper tools
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -72,12 +74,36 @@ def signin():
 
         user = User.query.filter_by(emailID=form.email.data).first()
         if user and check_password_hash(user.password, form.password.data):
+            session['user_name'] = escape(user.name)
             session['user_id'] = user.id
             session['role'] = user.role
-            flash('Welcome %s' % user.name)
 
-            return redirect(url_for('.signup'))
+            subpath = 'user'
 
-        flash('Wrong email or password', 'error-message')
-
+            if(session['role'] == 0):
+                role = 'customer'
+            elif(session['role'] == 1):
+                role = 'owner'
+            elif(session['role'] == 2):
+                role = 'manager'
+            elif(session['role'] == 3):
+                role = 'gardener'
+            return redirect(url_for('{path}.index'.format(path = role)))
     return render_template("auth/signin.html", form=form)
+
+# Checks if logged in before signing out
+def check_logged_in(role = None):
+    if('user_id' not in session):
+        abort(401)
+    if(role):
+        if role != session['role']:
+            print('herelrhelrl')
+            return False
+    return True
+
+
+@mod_auth.route('/signout/', methods=['GET'])
+def signout():
+    if check_logged_in():
+        session.clear()
+    return redirect(url_for('landing.index'))

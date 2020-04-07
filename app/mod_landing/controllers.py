@@ -11,5 +11,8 @@ mod_landing = Blueprint('landing', __name__, url_prefix='/')
 @mod_landing.route('/index', methods=['GET'])
 def index():
     print(session, str(datetime.datetime.now()))
-    session.clear()
-    return render_template("landing/index.html")
+    
+    if('role' in session):
+        return render_template("landing/index.html", role = str(session['role']), user_name = session['user_name'])
+    
+    return render_template("landing/index.html", role = None)
