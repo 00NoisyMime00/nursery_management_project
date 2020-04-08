@@ -107,7 +107,7 @@
 {% macro render_nurseries(nursery_list, id=-1) %}
     {% set dropdown_list = [
         ('owner.assign_manager', 'Assign Manager'),
-        ('owner.view_employees', 'Remove Manager'),
+        ('owner.remove_manager', 'Remove Manager'),
         ('landing.index', 'Remove Nursery')
         ] %}
     {% for id, maintenance, labour, pincode, city, country in nursery_list %}

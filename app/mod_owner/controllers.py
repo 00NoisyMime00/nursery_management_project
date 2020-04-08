@@ -15,7 +15,7 @@ from markupsafe import escape
 
 # Function to get employee list from database
 from app.mod_owner.queries import get_employee_list, get_nurser_list,\
-    check_manager_assigned
+    check_manager_assigned, get_manager_id
 
 # Import password / encryption helper tools
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -124,8 +124,10 @@ def assign_manager(id):
             return redirect(url_for('owner.view_nurseries'))
 
         # IF GET request, render page for assigning manager
-        if not check_manager_assigned(id):
+        # Checks if manager is not already assigned
+        if check_manager_assigned(id):
             return render_template('owner/assign_manager.html', role = str(session['role']), assigned='True')
+        
         employee_list = get_employee_list(session['user_id'])
         designation = 'manager'
         
@@ -137,4 +139,13 @@ def assign_manager(id):
         if employee_list == []:
             employee_list.append(('', '', ''))
         return render_template('owner/assign_manager.html', role = str(session['role']), employee_list = employee_list, id=id)
+    return redirect(url_for('landing.index'))
+
+@mod_owner.route('/view_nurseries/<int:id>/remove_manager', methods=['GET'])
+def remove_manager(id):
+    if check_logged_in(1):
+        if check_manager_assigned(id):
+            db.session.delete(nurseryStaff.query.filter_by(nID=id, eID=get_manager_id(id)).first())
+            db.session.commit()
+            return redirect(url_for('owner.view_nurseries'))
     return redirect(url_for('landing.index'))

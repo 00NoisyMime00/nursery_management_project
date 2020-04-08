@@ -32,5 +32,12 @@ def check_manager_assigned(nID):
 
     for employee in employee_list:
         if User.query.get(employee.eID).role == 2:
-           return False
-    return True 
+           return True
+    return False
+
+def get_manager_id(nID):
+    employee_list = nurseryStaff.query.filter_by(nID=nID).all()
+
+    for employee in employee_list:
+        if User.query.get(employee.eID).role == 2:
+           return employee.eID
