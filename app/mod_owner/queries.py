@@ -4,7 +4,7 @@ from app import db
 # Import User model for manager and gardener
 from app.mod_auth.models import User
 # Import employeeInfo model for Manager and gardener
-from app.mod_owner.models import employeeInfo, nurseryInfo, nurseryAddress
+from app.mod_owner.models import employeeInfo, nurseryInfo, nurseryAddress, nurseryStaff
 
 from markupsafe import escape
 
@@ -26,3 +26,11 @@ def get_nurser_list(ownerID):
         nursery_details_list.append( nursery.get_details().__add__(nurseryAddress.query.filter_by(nID = nursery.nID).first().get_complete_address() ) )
     
     return nursery_details_list
+
+def check_manager_assigned(nID):
+    employee_list = nurseryStaff.query.filter_by(nID=nID).all()
+
+    for employee in employee_list:
+        if User.query.get(employee.eID).role == 2:
+           return False
+    return True 

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% set active_page = 'assign_manager' %}
+{% set role = role|default(none) %}
+{% set employee_list = employee_list|default([('','',''),]) %}
+{% set assigned = assigned|default('False') %}
+
+{% from 'macros.html' import render_employees %}
+
+{% block title %}
+    Select Manager
+{% endblock %}
+
+{% block content %}
+    {% if role == '1' %}
+        {% if assigned == 'False' %}
+            {% if employee_list != [('','',''),] %}
+                <form action="{{ url_for(request.endpoint, id=id) }}" method="post">
+                    {{ render_employees(employee_list, 'True') }}
+                    <button type="submit">Assign</button>
+                </form>
+            {% else %}
+                <h1>No Manager is free</h1>
+            {% endif %}
+        {% else %}
+                <h1>Already assigned</h1>
+        {% endif %}
+    {% endif %}
+{% endblock %}

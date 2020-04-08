@@ -46,7 +46,7 @@ class nurseryInfo(db.Model):
         return '<Nursery ID: {id}>'.format(self.nID)
     
     def get_details(self):
-        return (self.maintenanceCost, self.labourCost)
+        return (self.nID, self.maintenanceCost, self.labourCost)
 
 
 class nurseryAddress(db.Model):
@@ -70,3 +70,17 @@ class nurseryAddress(db.Model):
     def get_complete_address(self):
         return (self.pincode, self.city, self.country)
     
+
+class nurseryStaff(db.Model):
+    __tablename__ = 'nurseryStaff'
+
+    nID = db.Column(db.Integer, db.ForeignKey(nurseryInfo.nID), nullable=False)
+    eID = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+
+    def __init__(self, nID, eID):
+
+        self.nID = nID
+        self.eID = eID
+    
+    def __repr__(self):
+        return '<eID-{eID} nID-{nID}>'.format(eID=self.eID, nID=self.nID)

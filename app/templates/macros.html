@@ -17,8 +17,8 @@
             {% set dropdown_list = [
                 ('owner.add_nursery', 'Add Nursery'),
                 ('owner.view_nurseries', 'View Nurseries'),
-                ('owner.view_employees', 'View Employees'),
                 ('owner.add_manager', 'Add Employee'),
+                ('owner.view_employees', 'View Employees'),
                 ('auth.signout', 'Signout')
                 ] %}
         {% elif role == '0' %}
@@ -62,6 +62,7 @@
         </div>
         
         {% if logged_in == 'True' %}
+            <!-- Drop down starts -->
             <div class="btn-group">
                 <!-- Dropdown button(only when signed in) -->
                 <button type="button" class="btn btn-secondary dropdown-toggle bg-dark" style="border: none;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -88,21 +89,53 @@
 <!-- navbar macro ends -->
 
 <!-- Macro for getting employee list under owner or manager -->
-{% macro render_employees(employee_list) %}
+{% macro render_employees(employee_list, assign='False') %}
     {% for name, emailID, designation in employee_list %}
+        {% if assign == 'False' %}
         <ul>
             <li><h2>{{ name }}   {{ emailID }}    {{ designation }}</h2></li>
         </ul>
+        {% else %}
+            <input type="checkbox" name="assign_manager" id="assign_manager" value={{emailID}} required>
+            {{ name }} - {{ emailID }}</br>
+        {% endif %}
     {% endfor %}
 {% endmacro %}
 <!-- employee list macro ends -->
 
 <!-- Macro for getting nurseries -->
-{% macro render_nurseries(nursery_list) %}
-        {% for maintenance, labour, pincode, city, country in nursery_list %}
-            <ul>
-                <h1><li>{{ maintenance }} |  {{ labour }} | {{ pincode }} | {{ city }}   |  {{ country }}</li></h1>
-            </ul>
-        {% endfor %}
+{% macro render_nurseries(nursery_list, id=-1) %}
+    {% set dropdown_list = [
+        ('owner.assign_manager', 'Assign Manager'),
+        ('owner.view_employees', 'Remove Manager'),
+        ('landing.index', 'Remove Nursery')
+        ] %}
+    {% for id, maintenance, labour, pincode, city, country in nursery_list %}
+        <ul>
+            <h1><li>
+                {{ maintenance }} |  {{ labour }} | {{ pincode }} | {{ city }}   |  {{ country }} 
+                <!-- Drop down starts -->
+                <div class="btn-group">
+                    <!-- Dropdown button(only when signed in) -->
+                    <button type="button" class="btn btn-secondary dropdown-toggle bg-dark" style="border: none;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a  href="{{url_for('landing.index')}}" style="text-decoration: none;">
+                            <i class="fas fa-cogs fa-2x ml-sm-2" style="color: #ffff;"></i>
+                        </a>
+                    </button>
+
+                    <!-- Drop down Items -->
+                    <div class="dropdown-menu dropdown-menu-right">
+                        {% for href, caption in dropdown_list%}
+                            <a href="{{ url_for(href, id=id) }}" style="text-decoration: none;">
+                                <button class="dropdown-item" type="button">
+                                    {{ caption }}
+                                </button>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </li></h1>
+        </ul>
+    {% endfor %}
 {% endmacro %}
 <!-- nurseries macro ends -->
