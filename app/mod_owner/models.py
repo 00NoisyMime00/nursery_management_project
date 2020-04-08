@@ -4,8 +4,8 @@ from app import db
 
 from app.mod_auth.models import User
 
+
 class employeeInfo(db.Model):
-    
     __tablename__ = 'employeeInfo'
     
     # Employee ID
@@ -17,6 +17,56 @@ class employeeInfo(db.Model):
         
         self.eID        = eID
         self.ownerID    = ownerID
+
+    def __repr__(self):
+
+        return '<Owner {oID} employee-{eID}>'.format(oID = self.ownerID, eID = self.eID) 
+
+
+class nurseryInfo(db.Model):
+    __tablename__ = 'nurseryInfo'
+
+    # Nursery ID
+    nID = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    # Owner ID
+    ownerID = db.Column(db.Integer, db.ForeignKey(User.id), primary_key = True)
+    # Maintenance cost
+    maintenanceCost = db.Column(db.Numeric(10, 2))
+    # Labour cost
+    labourCost = db.Column(db.Numeric(10, 2))
+
+    def __init__(self, ownerID, maintenanceCost, labourCost):
+        
+        self.ownerID            = ownerID
+        self.maintenanceCost    = maintenanceCost
+        self.labourCost         = labourCost
     
     def __repr__(self):
-        return '<Owner {oID} employee-{eID}>'.format(oID = self.ownerID, eID = self.eID) 
+        
+        return '<Nursery ID: {id}>'.format(self.nID)
+    
+    def get_details(self):
+        return (self.maintenanceCost, self.labourCost)
+
+
+class nurseryAddress(db.Model):
+    __tablename__ = 'nurseryAddress'
+
+    nID     = db.Column(db.Integer,  db.ForeignKey(nurseryInfo.nID), primary_key=True)
+    pincode = db.Column(db.Numeric(10, 0), nullable=False)
+    city    = db.Column(db.String(120), nullable=False)
+    country = db.Column(db.String(120), nullable=False)
+
+    def __init__(self, nID, pincode, city, country):
+
+        self.nID        = nID
+        self.pincode    = pincode
+        self.city       = city
+        self.country    = country
+    
+    def __repr__(self):
+        return '<Nursery ID-{nID} pincode-{pincode} city-{city}>'.format(nID=self.nID, pincode=self.pincode, city=self.city)
+    
+    def get_complete_address(self):
+        return (self.pincode, self.city, self.country)
+    

@@ -44,5 +44,7 @@ app.register_blueprint(owner_module)
 from app.mod_auth.models import User
 # Import the employeeInfo table
 from app.mod_owner.models import employeeInfo
+# Import the nurseryInfo table
+from app.mod_owner.models import nurseryInfo
 
 db.create_all()

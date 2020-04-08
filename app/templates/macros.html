@@ -1,3 +1,4 @@
+<!-- Macro for navbar -->
 {% macro render_navbar(active_page, logged_in = 'False', role = none) %}
     
     {% if logged_in == 'False' %}
@@ -14,6 +15,8 @@
          <!-- Set the items for drop down menu once signed in -->
         {% if role == '1' %}
             {% set dropdown_list = [
+                ('owner.add_nursery', 'Add Nursery'),
+                ('owner.view_nurseries', 'View Nurseries'),
                 ('owner.view_employees', 'View Employees'),
                 ('owner.add_manager', 'Add Employee'),
                 ('auth.signout', 'Signout')
@@ -82,7 +85,9 @@
         
     </nav>
 {% endmacro %}
+<!-- navbar macro ends -->
 
+<!-- Macro for getting employee list under owner or manager -->
 {% macro render_employees(employee_list) %}
     {% for name, emailID, designation in employee_list %}
         <ul>
@@ -90,3 +95,14 @@
         </ul>
     {% endfor %}
 {% endmacro %}
+<!-- employee list macro ends -->
+
+<!-- Macro for getting nurseries -->
+{% macro render_nurseries(nursery_list) %}
+        {% for maintenance, labour, pincode, city, country in nursery_list %}
+            <ul>
+                <h1><li>{{ maintenance }} |  {{ labour }} | {{ pincode }} | {{ city }}   |  {{ country }}</li></h1>
+            </ul>
+        {% endfor %}
+{% endmacro %}
+<!-- nurseries macro ends -->

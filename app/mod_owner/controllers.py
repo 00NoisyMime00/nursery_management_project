@@ -8,13 +8,12 @@ from app import db
 # Import User model for manager and gardener
 from app.mod_auth.models import User
 # Import employeeInfo model for Manager and gardener
-from app.mod_owner.models import employeeInfo
+from app.mod_owner.models import employeeInfo, nurseryInfo, nurseryAddress
 
 from markupsafe import escape
 
 # Function to get employee list from database
-from app.mod_owner.queries import get_employee_list
-
+from app.mod_owner.queries import get_employee_list, get_nurser_list
 
 # Import password / encryption helper tools
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -26,9 +25,6 @@ from app.mod_auth.controllers import check_logged_in
 # Define the blueprint: 'customer', set its url prefix: app.url/auth
 mod_owner = Blueprint('owner', __name__, url_prefix='/')
 
-
-# @mod_owner.route('/', methods=['GET'])
-# @mod_owner.route('/<path:subpath>', methods=['GET'])
 
 @mod_owner.route('/', methods=['GET'])
 def index():
@@ -66,7 +62,7 @@ def add_manager():
         return render_template('owner/add_employee.html', role = str(session['role']))
     return redirect(url_for('landing.index'))
 
-
+# YET TO ADD FILTERS
 @mod_owner.route('/view_employees', methods=['GET'])
 def view_employees():
     if check_logged_in(1):
@@ -84,3 +80,31 @@ def view_employees():
         return render_template('owner/view_employee.html', role = str(session['role']), employee_list = employee_list)
     return redirect(url_for('landing.index'))
 
+@mod_owner.route('/add_nursery', methods=['GET', 'POST'])
+def add_nursery():
+    print(check_logged_in(1))
+    if check_logged_in(1):
+        if request.method == 'POST':
+            pincode = request.form['pincode']
+            city = request.form['city']
+            country = request.form['country']
+            labour = request.form['labour']
+            maintenance = request.form['maintenance']
+
+            temp = nurseryInfo(ownerID=int(session['user_id']), maintenanceCost=maintenance, labourCost=labour)
+            db.session.add(temp)
+            db.session.commit()
+            db.session.add(nurseryAddress(nID=temp.nID, pincode=pincode, city=city, country=country))
+            db.session.commit()
+            return redirect(url_for('owner.index'))
+
+        return render_template('owner/add_nursery.html', role = str(session['role']))
+    return redirect(url_for('landing.index'))
+
+# YET TO ADD FILTERS
+@mod_owner.route('/view_nurseries', methods=['GET'])
+def view_nurseries():
+    if(check_logged_in(1)):
+        return render_template('owner/view_nursery.html', role=str(session['role']), nursery_list=get_nurser_list(session['user_id']))
+        
+    return redirect(url_for('landing.index'))

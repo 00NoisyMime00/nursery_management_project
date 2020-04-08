@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% set active_page = 'view_nursery' %}
+{% set role = role|default(none) %}
+{% set nursery_list = nursery_list|default([('','','','',''),]) %}
+
+{% from 'macros.html' import render_nurseries %}
+
+{% block title %}
+    View Employees
+{% endblock %}
+
+{% block content %}
+    {% if role == '1' %}
+        {{ render_nurseries(nursery_list) }}
+    {% endif %}
+{% endblock %}
