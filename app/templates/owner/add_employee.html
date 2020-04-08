@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if role == 1 %}
+    {% if role == '1' %}
     
     <form method="POST" action="{{ url_for('owner.add_manager') }}">
         <label for="fname">name:</label><br>

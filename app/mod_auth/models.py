@@ -29,6 +29,8 @@ class User(Base):
     role     = db.Column(db.SmallInteger, nullable=False)   # 0 - customer, 1 - Owner, 2 - Manager, 3 - Gardener
     # status   = db.Column(db.SmallInteger, nullable=False)   # yet to be decided
 
+    role_dict = {0: 'Customer', 1:'Owner', 2:'Manager', 3:'Gardener'}
+
     # New instance instantiation procedure
     def __init__(self, name, email, password, role):
 
@@ -38,4 +40,7 @@ class User(Base):
         self.role = role
 
     def __repr__(self):
-        return '<User {name} id-{id}>'.format(name = self.name, id = self.id)                        
+        return '<User {name} id-{id}>'.format(name = self.name, id = self.id)    
+
+    def get_details(self):
+        return (self.name, self.emailID, self.role_dict[self.role])                    

@@ -1,8 +1,3 @@
-<!-- REMOVE THISSSSSSSSS ONLY TILL FEATURES OTHER THAN OWNER NOT THERE -->
-{% set dropdown_list = [
-    ('owner.add_manager', 'Add Employee'),
-    ('auth.signout', 'Signout')
-    ] %}
 {% macro render_navbar(active_page, logged_in = 'False', role = none) %}
     
     {% if logged_in == 'False' %}
@@ -19,6 +14,7 @@
          <!-- Set the items for drop down menu once signed in -->
         {% if role == '1' %}
             {% set dropdown_list = [
+                ('owner.view_employees', 'View Employees'),
                 ('owner.add_manager', 'Add Employee'),
                 ('auth.signout', 'Signout')
                 ] %}
@@ -85,4 +81,12 @@
         {% endif %}
         
     </nav>
+{% endmacro %}
+
+{% macro render_employees(employee_list) %}
+    {% for name, emailID, designation in employee_list %}
+        <ul>
+            <li><h2>{{ name }}   {{ emailID }}    {{ designation }}</h2></li>
+        </ul>
+    {% endfor %}
 {% endmacro %}

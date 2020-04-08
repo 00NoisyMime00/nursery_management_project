@@ -12,6 +12,9 @@ from app.mod_owner.models import employeeInfo
 
 from markupsafe import escape
 
+# Function to get employee list from database
+from app.mod_owner.queries import get_employee_list
+
 
 # Import password / encryption helper tools
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -60,10 +63,24 @@ def add_manager():
                 db.session.commit()
                 return redirect(url_for('owner.index'))
 
-        return render_template('owner/add_employee.html', role = session['role'])
+        return render_template('owner/add_employee.html', role = str(session['role']))
     return redirect(url_for('landing.index'))
 
-    @mod_owner.route('/view_employee', methods=['GET'])
-    def view_employee():
-        pass
-    
+
+@mod_owner.route('/view_employees', methods=['GET'])
+def view_employees():
+    if check_logged_in(1):
+        employee_list = get_employee_list(session['user_id'])
+        designation = request.args.get('role', default = '')
+        
+        temp = []
+        if designation != '' and escape(designation.lower()) in ['gardener', 'manager']:
+            for e in employee_list:
+                if e[2].lower() == escape(designation.lower()):
+                    temp.append(e)
+            employee_list = temp
+        if employee_list == []:
+            employee_list.append(('', '', ''))
+        return render_template('owner/view_employee.html', role = str(session['role']), employee_list = employee_list)
+    return redirect(url_for('landing.index'))
+
