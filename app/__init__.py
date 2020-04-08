@@ -39,4 +39,10 @@ app.register_blueprint(owner_module)
 
 # Build the database:
 # This will create the database file using SQLAlchemy
+
+# Import the userInfo table
+from app.mod_auth.models import User
+# Import the employeeInfo table
+from app.mod_owner.models import employeeInfo
+
 db.create_all()

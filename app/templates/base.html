@@ -20,7 +20,7 @@
 
     {% block nav %}
         {% if role is not none %}
-            {{ render_navbar(active_page, 'True') }}
+            {{ render_navbar(active_page, 'True', role) }}
         {% else %}
             {{ render_navbar(active_page) }}
         {% endif %}

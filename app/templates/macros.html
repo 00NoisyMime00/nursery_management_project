@@ -1,9 +1,9 @@
-{% set navbar_list = [
-    ("landing.index", 'index', 'Home'),
-    ('auth.signin', 'signin', 'Signin'),
-    ("auth.signup", 'signup', 'Signup')
+<!-- REMOVE THISSSSSSSSS ONLY TILL FEATURES OTHER THAN OWNER NOT THERE -->
+{% set dropdown_list = [
+    ('owner.add_manager', 'Add Employee'),
+    ('auth.signout', 'Signout')
     ] %}
-{% macro render_navbar(active_page, logged_in = 'False') %}
+{% macro render_navbar(active_page, logged_in = 'False', role = none) %}
     
     {% if logged_in == 'False' %}
         {% set navbar_list = [
@@ -12,9 +12,29 @@
             ("auth.signup", 'signup', 'Signup')
             ] %}
     {% else %}
+        <!-- Sets the items on nav bar when signed in -->
         {% set navbar_list = [
             ("landing.index", 'index', 'Home'),
             ] %}
+         <!-- Set the items for drop down menu once signed in -->
+        {% if role == '1' %}
+            {% set dropdown_list = [
+                ('owner.add_manager', 'Add Employee'),
+                ('auth.signout', 'Signout')
+                ] %}
+        {% elif role == '0' %}
+            {% set dropdown_list = [
+                ('auth.signout', 'Signout')
+                ] %}
+        {% elif role == '2' %}
+            {% set dropdown_list = [
+                ('auth.signout', 'Signout')
+                ] %}
+        {% elif role == '3' %}
+            {% set dropdown_list = [
+                ('auth.signout', 'Signout')
+                ] %}
+        {% endif %}
     {% endif %}
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark nav">
@@ -50,18 +70,16 @@
                         <i class="fas fa-user-tie fa-2x ml-sm-2" style="color: #ffff;"></i>
                     </a>
                 </button>
-                
-                <!-- Dropdown Items -->
+
+                <!-- Drop down Items -->
                 <div class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" type="button">Action</button>
-                <button class="dropdown-item" type="button">Another action</button>
-                <!-- Signout -->
-                <a href="{{ url_for('auth.signout') }}" style="text-decoration: none;">
-                    <button class="dropdown-item" type="button">
-                        Signout
-                    </button>
-                </a>
-                    
+                    {% for href, caption in dropdown_list%}
+                        <a href="{{ url_for(href) }}" style="text-decoration: none;">
+                            <button class="dropdown-item" type="button">
+                                {{ caption }}
+                            </button>
+                        </a>
+                    {% endfor %}
                 </div>
             </div>
         {% endif %}

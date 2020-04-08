@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% set active_page = 'add_employee' %}
+{% set role = role|default(none) %}
+
+{% block title %}
+    Add Employee
+{% endblock %}
+
+{% block content %}
+    {% if role == 1 %}
+    
+    <form method="POST" action="{{ url_for('owner.add_manager') }}">
+        <label for="fname">name:</label><br>
+        <input type="text" id="name" name="name" required><br>
+        <label for="emailID">emailID:</label><br>
+        <input type="text" id="emailID" name="emailID" required><br>
+        <label for="password">password</label><br>
+        <input type="password" id="password" name="password" required><br>
+
+        <label>Role:</label><br>
+        <input type="radio" id="role" name="role" value="2" required>
+        <label for="male">Manager</label><br>
+        <input type="radio" id="role" name="role" value="3">
+        <label for="female">Gardener</label><br>
+
+        <button type="submit" name="submit">Create</button>
+    </form>
+
+    {% endif %}
+{% endblock %}

@@ -22,14 +22,10 @@ mod_auth = Blueprint('auth', __name__, url_prefix='/auth')
 # Set the route and create users(YET TO BE IMPLEMENTED!)
 @mod_auth.route('/signup/', methods=['GET', 'POST'])
 def signup():
-    # admin = User(name='admin', email='admin@code.com', password='admin@123')
-    # admin.role = 1
-    # admin.status = 1
-    # db.session.add(admin)
-    # db.session.commit()
-    # print(User.query.all())
-    # print(db.engine.execute("select * from auth_user"))
-    # return render_template("auth/signup.html")
+        # Check if not already signed in
+    if 'user_id' in session:
+        return redirect(url_for('landing.index'))
+
     if request.method == 'POST':
         username = request.form['name']
         emailID = request.form['emailID']
@@ -57,14 +53,15 @@ def signup():
             db.session.commit()
             return redirect(url_for('auth.signin'))
 
-        flash(error)
-
     return render_template('auth/signup.html')
 
 
 # Set the route and accepted methods
 @mod_auth.route('/signin/', methods=['GET', 'POST'])
 def signin():
+    # Check if not already signed in
+    if 'user_id' in session:
+        return redirect(url_for('landing.index'))
 
     # If sign in form is submitted
     form = LoginForm(request.form)
