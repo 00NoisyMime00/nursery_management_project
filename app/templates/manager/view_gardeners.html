@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% set active_page = 'view_gardeners' %}
+{% set role = role|default(none) %}
+{% set employee_list = employee_list|default([('','',''),]) %}
+
+{% from 'macros.html' import render_employees %}
+
+{% block title %}
+    View Gardeners
+{% endblock %}
+
+{% block content %}
+    {% if role == '2' %}
+        {{ render_employees(employee_list) }}
+    {% endif %}
+{% endblock %}

@@ -18,6 +18,8 @@ from app.mod_auth.models import User
 # Import employeeInfo model for Manager and gardener
 from app.mod_owner.models import employeeInfo, nurseryStaff
 
+from app.mod_manager.queries import get_gardeners
+
 # Import module forms
 from app.mod_auth.forms import LoginForm
 
@@ -65,6 +67,14 @@ def add_gardener():
             return render_template('manager/add_gardener.html', role=str(session['role']), assigned='True')
     return redirect(url_for('landing.index'))
 
-@mod_manager.route('view_gardener', methods=['GET'])
-def view_gardener():
-    pass
+@mod_manager.route('view_gardeners', methods=['GET'])
+def view_gardeners():
+    if check_logged_in(2):
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first().nID
+        if nID != None:
+            gardener_list = get_gardeners(nID)
+            
+            if gardener_list == []:
+                gardener_list = [('', '', ''),]
+            return render_template("manager/view_gardeners.html", role = str(session['role']), employee_list = gardener_list)
+    return redirect(url_for('landing.index'))

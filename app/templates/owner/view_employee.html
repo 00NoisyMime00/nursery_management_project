@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% set active_page = 'view_employee' %}
 {% set role = role|default(none) %}
-{% set employee_list = employee_list|default([('',''),]) %}
+{% set employee_list = employee_list|default([('','',''),]) %}
 
 {% from 'macros.html' import render_employees %}
 
