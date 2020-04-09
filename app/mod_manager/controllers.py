@@ -16,7 +16,7 @@ from app import db
 # Import User model for manager and gardener
 from app.mod_auth.models import User
 # Import employeeInfo model for Manager and gardener
-from app.mod_owner.models import employeeInfo
+from app.mod_owner.models import employeeInfo, nurseryStaff
 
 # Import module forms
 from app.mod_auth.forms import LoginForm
@@ -37,7 +37,9 @@ def index():
 @mod_manager.route('/add_gardener', methods=['GET', 'POST'])
 def add_gardener():
     if check_logged_in(2):
-        if request.method == 'POST':
+
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first().nID
+        if request.method == 'POST' and nID != None:
             username = request.form['name']
             emailID = request.form['emailID']
             password = request.form['password']
@@ -56,9 +58,13 @@ def add_gardener():
                 db.session.add(temp)
                 db.session.commit()
                 db.session.add(employeeInfo(temp.id , int(session['user_id'])))
+                db.session.add(nurseryStaff(nID, temp.id))
                 db.session.commit()
-                print(temp, '<<<<<<<<<<<<<<')
                 return redirect(url_for('manager.index'))
-
-        return render_template('manager/add_gardener.html', role=str(session['role']))
+        if nID != None:
+            return render_template('manager/add_gardener.html', role=str(session['role']), assigned='True')
     return redirect(url_for('landing.index'))
+
+@mod_manager.route('view_gardener', methods=['GET'])
+def view_gardener():
+    pass
