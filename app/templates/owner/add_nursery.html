@@ -2,29 +2,45 @@
 {% set active_page = 'add_nursery' %}
 {% set role = role|default(none) %}
 
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+
+
 {% block title %}
     Add Nursery
 {% endblock %}
 
 {% block content %}
     {% if role == '1' %}
+
+    <div style = "padding: 2%;"class="jumbotron h1 text-center">
+        Nusery Mangement Simplified
+        <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">Add Nursery</p>
+    </div>
+
+    <div class="container">
+        <form method="POST" action="{{ url_for('owner.add_nursery') }}" enctype ="multipart/form-data">
+        <dl>
+            {{ render_field(form.pincode ,placeholder = "Pincode",class = "form-control") }}
+            {{ render_field(form.city,placeholder = "City",class = "form-control") }}
+            {{ render_field(form.country,placeholder = "Country",class = "form-control") }}
+            {{ render_field(form.labour,placeholder = "Labour Cost",class = "form-control") }}
+            {{ render_field(form.maintenance,placeholder = "Maintenance Cost",class = "form-control") }}
+        </dl>
+        <p><input type=submit value="Create" class="btn btn-info mt-2"></p>
+        </form>
+    </div>
     
-    <form method="POST" action="{{ url_for('owner.add_nursery') }}">
-        <label for="fname">Pincode:</label><br>
-        <input type="number" min="100000" max="999999" id="pincode" name="pincode" required><br>
-        <label for="emailID">City:</label><br>
-        <input type="text" id="city" name="city" required><br>
-        <label for="country">Country:</label><br>
-        <input type="text" id="country" name="country" required><br>
-
-        <label for="emailID">Average Labour Cost</label><br>
-        <input type="number" step="0.01" id="labour" name="labour" required><br>
-        <label for="country">Average Maintenance Cost</label><br>
-        <input type="number" step="0.01" id="maintenance" name="maintenance" required><br>
-
-
-        <button type="submit" name="submit">Create</button>
-    </form>
-
+    
     {% endif %}
 {% endblock %}

@@ -13,7 +13,7 @@ from wtforms.fields.core import RadioField, SelectField
 # Define the login form (WTForms)
 
 class LoginForm(Form):
-    email    = email = StringField('Email Address', [validators.Length(min=6, max=35), validators.DataRequired(),])
+    email    = email = StringField('Email Address', [validators.Length(min=6, max=35), validators.DataRequired()])
     password = PasswordField('New Password', [validators.DataRequired()])
 
 class RegistrationForm(Form):

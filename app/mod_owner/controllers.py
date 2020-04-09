@@ -23,6 +23,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # import checked_logged_in function
 from app.mod_auth.controllers import check_logged_in
 
+from app.mod_owner.forms import registerNurseryForm
+
 # Define the blueprint: 'customer', set its url prefix: app.url/auth
 mod_owner = Blueprint('owner', __name__, url_prefix='/')
 
@@ -84,23 +86,25 @@ def view_employees():
 # Add a new nursery
 @mod_owner.route('/add_nursery', methods=['GET', 'POST'])
 def add_nursery():
-    print(check_logged_in(1))
     if check_logged_in(1):
-        if request.method == 'POST':
-            pincode = request.form['pincode']
-            city = request.form['city']
-            country = request.form['country']
-            labour = request.form['labour']
-            maintenance = request.form['maintenance']
-
-            temp = nurseryInfo(ownerID=int(session['user_id']), maintenanceCost=maintenance, labourCost=labour)
-            db.session.add(temp)
-            db.session.commit()
-            db.session.add(nurseryAddress(nID=temp.nID, pincode=pincode, city=city, country=country))
-            db.session.commit()
+        form = registerNurseryForm(request.form)
+        if request.method == 'POST' and form.validate():
+            
+            pincode     = form.pincode.data
+            city        = form.city.data
+            country     = form.country.data
+            labour      = form.labour.data
+            maintenance = form.maintenance.data
+            print(pincode, city, country, labour,'<<<<<<<<<')
+            if pincode != None or city != None or country != None or labour != None or maintenance != None:
+                temp = nurseryInfo(ownerID=int(session['user_id']), maintenanceCost=maintenance, labourCost=labour)
+                db.session.add(temp)
+                db.session.commit()
+                db.session.add(nurseryAddress(nID=temp.nID, pincode=pincode, city=city, country=country))
+                db.session.commit()
             return redirect(url_for('owner.view_nurseries'))
 
-        return render_template('owner/add_nursery.html', role = str(session['role']))
+        return render_template('owner/add_nursery.html', role = str(session['role']), form=form)
     return redirect(url_for('landing.index'))
 
 # YET TO ADD FILTERS

@@ -60,9 +60,8 @@ def signin():
 
     # If sign in form is submitted
     form = LoginForm(request.form)
-
     # Verify the sign in form
-    if form.validate():
+    if request.method == 'POST' and form.validate():
 
         user = User.query.filter_by(emailID=form.email.data).first()
         if user and check_password_hash(user.password, form.password.data):
