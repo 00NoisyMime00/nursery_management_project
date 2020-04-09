@@ -23,7 +23,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # import checked_logged_in function
 from app.mod_auth.controllers import check_logged_in
 
-
 # Define the blueprint: 'customer', set its url prefix: app.url/auth
 mod_owner = Blueprint('owner', __name__, url_prefix='/')
 
@@ -82,6 +81,7 @@ def view_employees():
         return render_template('owner/view_employee.html', role = str(session['role']), employee_list = employee_list)
     return redirect(url_for('landing.index'))
 
+# Add a new nursery
 @mod_owner.route('/add_nursery', methods=['GET', 'POST'])
 def add_nursery():
     print(check_logged_in(1))
@@ -111,6 +111,7 @@ def view_nurseries():
         
     return redirect(url_for('landing.index'))
 
+# Assign manager to nurseries
 @mod_owner.route('/view_nurseries/<int:id>/assign_manager', methods=['GET', 'POST'])
 def assign_manager(id):
     if check_logged_in(1):
@@ -141,6 +142,7 @@ def assign_manager(id):
         return render_template('owner/assign_manager.html', role = str(session['role']), employee_list = employee_list, id=id)
     return redirect(url_for('landing.index'))
 
+# Removes manager
 @mod_owner.route('/view_nurseries/<int:id>/remove_manager', methods=['GET'])
 def remove_manager(id):
     if check_logged_in(1):
@@ -150,6 +152,7 @@ def remove_manager(id):
             return redirect(url_for('owner.view_nurseries'))
     return redirect(url_for('landing.index'))
 
+# Cascades on delete
 @mod_owner.route('/view_nurseries/<int:id>/remove_nursery')
 def remove_nursery(id):
     if check_logged_in(1):
