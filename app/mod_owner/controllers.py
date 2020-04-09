@@ -98,7 +98,7 @@ def add_nursery():
             db.session.commit()
             db.session.add(nurseryAddress(nID=temp.nID, pincode=pincode, city=city, country=country))
             db.session.commit()
-            return redirect(url_for('owner.index'))
+            return redirect(url_for('owner.view_nurseries'))
 
         return render_template('owner/add_nursery.html', role = str(session['role']))
     return redirect(url_for('landing.index'))
@@ -148,4 +148,12 @@ def remove_manager(id):
             db.session.delete(nurseryStaff.query.filter_by(nID=id, eID=get_manager_id(id)).first())
             db.session.commit()
             return redirect(url_for('owner.view_nurseries'))
+    return redirect(url_for('landing.index'))
+
+@mod_owner.route('/view_nurseries/<int:id>/remove_nursery')
+def remove_nursery(id):
+    if check_logged_in(1):
+        db.session.delete(nurseryInfo.query.filter_by(nID=id).first())
+        db.session.commit()
+        return redirect(url_for('owner.view_nurseries'))
     return redirect(url_for('landing.index'))

@@ -34,6 +34,10 @@ class nurseryInfo(db.Model):
     maintenanceCost = db.Column(db.Numeric(10, 2))
     # Labour cost
     labourCost = db.Column(db.Numeric(10, 2))
+    # Not tested
+    address = db.relationship("nurseryAddress", backref="nurseryInfo", cascade="all, delete-orphan", lazy='dynamic')
+    # Not tested
+    staff = db.relationship("nurseryStaff", backref="nurseryInfo", cascade='all, delete-orphan', lazy='dynamic')
 
     def __init__(self, ownerID, maintenanceCost, labourCost):
         

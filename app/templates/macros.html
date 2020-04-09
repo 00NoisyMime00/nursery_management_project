@@ -96,7 +96,7 @@
             <li><h2>{{ name }}   {{ emailID }}    {{ designation }}</h2></li>
         </ul>
         {% else %}
-            <input type="checkbox" name="assign_manager" id="assign_manager" value={{emailID}} required>
+            <input type="radio" name="assign_manager" id="assign_manager" value={{emailID}} required>
             {{ name }} - {{ emailID }}</br>
         {% endif %}
     {% endfor %}
@@ -108,7 +108,7 @@
     {% set dropdown_list = [
         ('owner.assign_manager', 'Assign Manager'),
         ('owner.remove_manager', 'Remove Manager'),
-        ('landing.index', 'Remove Nursery')
+        ('owner.remove_nursery', 'Remove Nursery')
         ] %}
     {% for id, maintenance, labour, pincode, city, country in nursery_list %}
         <ul>
