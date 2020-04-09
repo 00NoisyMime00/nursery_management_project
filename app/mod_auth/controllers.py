@@ -1,6 +1,6 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
-                  flash, g, session, redirect, url_for, abort
+                  flash, g, session, redirect, url_for, abort,flash
 
 from markupsafe import escape
 
@@ -16,6 +16,8 @@ from app.mod_auth.forms import LoginForm
 # Import module models (i.e. User)
 from app.mod_auth.models import User
 
+from .forms import RegistrationForm,LoginForm
+
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -26,11 +28,12 @@ def signup():
     if 'user_id' in session:
         return redirect(url_for('landing.index'))
 
-    if request.method == 'POST':
-        username = request.form['name']
-        emailID = request.form['emailID']
-        password = request.form['password']
-        role = request.form['role']
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
+        username = form.name.data
+        emailID = form.email.data
+        password = form.password.data
+        role = int(form.role.data)
         error = None
 
         if not username:
@@ -39,21 +42,13 @@ def signup():
             error = 'Password is required.'
         elif User.query.filter_by(emailID = emailID
         ).first() is not None:
-        # elif db.execute(
-        #     'SELECT id FROM user WHERE username = ?', (username,)
-        # ).fetchone() is not None:
             error = 'User {} is already registered.'.format(username)
-
         if error is None:
-            # db.execute(
-            #     'INSERT INTO user (username, password) VALUES (?, ?)',
-            #     (username, generate_password_hash(password))
-            # )
             db.session.add(User(username, emailID, generate_password_hash(password), role))
             db.session.commit()
             return redirect(url_for('auth.signin'))
 
-    return render_template('auth/signup.html')
+    return render_template('auth/signup.html',form=form,title = "Sign Up Page")
 
 
 # Set the route and accepted methods
@@ -67,7 +62,7 @@ def signin():
     form = LoginForm(request.form)
 
     # Verify the sign in form
-    if form.validate_on_submit():
+    if form.validate():
 
         user = User.query.filter_by(emailID=form.email.data).first()
         if user and check_password_hash(user.password, form.password.data):
