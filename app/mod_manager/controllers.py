@@ -110,7 +110,8 @@ def add_plant():
         
         if request.method == 'POST' and nID != None:
             plantName = request.form['pname'].lower()
-            db.session.add(plantTypeInfo(plantName, nID))
+            plant = plantTypeInfo(plantName, nID)
+            db.session.add(plant)
             db.session.commit()
 
             if 'img' not in request.files:
@@ -121,7 +122,7 @@ def add_plant():
             if file.filename == '':
                 return redirect(url_for('landing.index'))
 
-            plantType = plantTypeInfo.query.filter_by(plantTypeName=plantName).first()
+            plantType = plantTypeInfo.query.filter_by(plantTypeName=plantName, nID=nID).first()
             
             IMG_DIR = os.path.join(BASE_IMG_DIR, '{nID}/{typeID}'.format(nID=nID, typeID=plantType.plantTypeID))
 
