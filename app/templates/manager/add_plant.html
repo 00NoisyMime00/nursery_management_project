@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% set active_page = 'add_plant' %}
+{% set role = role|default(none) %}
+{% set assigned = assigned|default('False') %}
+
+{% block title %}
+    Add Gardener
+{% endblock %}
+
+{% block content %}
+    {% if role == '2' %}
+    
+    {% if assigned == 'True' %}
+        <form method="POST" enctype=multipart/form-data action="{{ url_for('manager.add_plant') }}">
+            <label for="name">Plant Name:</label><br>
+            <input type="text" id="pname" name="pname" required><br>
+            <label for="image">Choose Image:</label><br>
+            <input type=file id="img" name="img" required><br><br>
+
+            <button type="submit" name="submit" value=upload>Create</button>
+        </form>
+    {% else %}
+        <h1>No nursery assigned yet.</h1>
+    {% endif %}
+
+
+    {% endif %}
+{% endblock %}

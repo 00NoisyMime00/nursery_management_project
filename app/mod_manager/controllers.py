@@ -2,7 +2,7 @@
 from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for, abort
 
-from markupsafe import escape
+from markupsafe import escape 
 
 # Import password / encryption helper tools
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -18,6 +18,8 @@ from app.mod_auth.models import User
 # Import employeeInfo model for Manager and gardener
 from app.mod_owner.models import employeeInfo, nurseryStaff
 
+from app.mod_manager.models import plantTypeInfo, plantImages
+
 from app.mod_manager.queries import get_gardeners
 
 # Import module forms
@@ -25,6 +27,23 @@ from app.mod_auth.forms import LoginForm
 
 # Import module models (i.e. User)
 from app.mod_auth.models import User
+# For image upload making directory
+from pathlib import Path
+
+# For uploading image
+from werkzeug.utils import secure_filename
+
+# For creating image paths
+import os
+# For editing Images
+from PIL import Image
+from io import BytesIO
+
+# Base directory to store images
+from config import BASE_IMG_DIR
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_manager = Blueprint('manager', __name__, url_prefix='/')
@@ -77,4 +96,60 @@ def view_gardeners():
             if gardener_list == []:
                 gardener_list = [('', '', ''),]
             return render_template("manager/view_gardeners.html", role = str(session['role']), employee_list = gardener_list)
+    return redirect(url_for('landing.index'))
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@mod_manager.route('/add_plant', methods=['GET', 'POST'])
+def add_plant():
+    if check_logged_in(2):
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first().nID
+        
+        if request.method == 'POST' and nID != None:
+            plantName = request.form['pname'].lower()
+            db.session.add(plantTypeInfo(plantName, nID))
+            db.session.commit()
+
+            if 'img' not in request.files:
+                return redirect(url_for('landing.index'))
+            
+            file = request.files['img']
+
+            if file.filename == '':
+                return redirect(url_for('landing.index'))
+
+            plantType = plantTypeInfo.query.filter_by(plantTypeName=plantName).first()
+            
+            IMG_DIR = os.path.join(BASE_IMG_DIR, '{nID}/{typeID}'.format(nID=nID, typeID=plantType.plantTypeID))
+
+            Path(IMG_DIR).mkdir(parents=True, exist_ok=True)
+
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                IMG_PATH = os.path.join(IMG_DIR, plantName+'.'+filename.rsplit('.')[1].lower())
+                img = Image.open(BytesIO(file.read()))
+                w, h = img.size
+                img = img.resize((250, 250))
+                img.save(IMG_PATH)
+                db.session.add(plantImages(plantType.plantTypeID, IMG_PATH))
+                db.session.commit()
+                return redirect(url_for('landing.index'))
+            
+        
+        if nID != None:
+            return render_template('manager/add_plant.html', role=str(session['role']), assigned='True')
+    return redirect(url_for('landing.index'))
+
+@mod_manager.route('/view_plants', methods=['GET'])
+def view_plants():
+    if check_logged_in(2):
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first().nID
+
+        if nID != None:
+            plants_list = plantTypeInfo.query.filter_by(nID=nID).all()
+            print(plantImages.query.with_parent(plants_list[0]).first(),"<<<<<<<<<<")
+
     return redirect(url_for('landing.index'))
