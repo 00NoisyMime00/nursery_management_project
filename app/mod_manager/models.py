@@ -7,7 +7,7 @@ from app.mod_owner.models import nurseryInfo
 class plantTypeInfo(db.Model):
     __tablename__ = 'plantTypeInfo'
 
-    plantTypeID     = db.Column(db.Integer, primary_key=True)
+    plantTypeID     = db.Column(db.Integer, primary_key=True, autoincrement = True)
     plantTypeName   = db.Column(db.String(100))
     nID             = db.Column(db.Integer, db.ForeignKey(nurseryInfo.nID))
     imageURLS       = db.relationship("plantImages", backref="plantTypeInfo", cascade="all, delete-orphan", lazy='dynamic')

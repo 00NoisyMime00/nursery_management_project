@@ -131,9 +131,9 @@ def add_plant():
                 filename = secure_filename(file.filename)
                 IMG_PATH = os.path.join(IMG_DIR, plantName+'.'+filename.rsplit('.')[1].lower())
                 img = Image.open(BytesIO(file.read()))
-                w, h = img.size
                 img = img.resize((250, 250))
                 img.save(IMG_PATH)
+                IMG_PATH = 'static/'+IMG_PATH.split('static/')[1]
                 db.session.add(plantImages(plantType.plantTypeID, IMG_PATH))
                 db.session.commit()
                 return redirect(url_for('landing.index'))
@@ -150,6 +150,15 @@ def view_plants():
 
         if nID != None:
             plants_list = plantTypeInfo.query.filter_by(nID=nID).all()
-            print(plantImages.query.with_parent(plants_list[0]).first(),"<<<<<<<<<<")
+            
+            plant_details_list = []
+            
+            for plant in plants_list:
+                plant_details_list.append((plant.plantTypeName, plant.nID).__add__((plantImages.query.with_parent(plant).first().imageLink,)) )
+            
+            if plant_details_list == []:
+                plant_details_list = [('','',''),]
+            print('sending', plant_details_list)
+            return render_template('manager/view_plants.html',role=str(session['role']), plants_list=plant_details_list)
 
     return redirect(url_for('landing.index'))

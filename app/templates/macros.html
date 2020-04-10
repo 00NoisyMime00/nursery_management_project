@@ -28,6 +28,7 @@
         {% elif role == '2' %}
             {% set dropdown_list = [
                 ('manager.add_plant', 'Add Plant'),
+                ('manager.view_plants', 'View Plants'),
                 ('manager.add_gardener', 'Add Gardener'),
                 ('manager.view_gardeners', 'View Gardeners'),
                 ('auth.signout', 'Signout')
@@ -142,3 +143,19 @@
     {% endfor %}
 {% endmacro %}
 <!-- nurseries macro ends -->
+
+<!-- Macro for rendering Plants -->
+
+{% macro render_plants(plant_list) %}
+        {% for name, nID, link in plant_list %}
+            <ul>
+                <li>
+                    <img src="{{ link }}" alt="">
+                    {{ name }}
+                    {{ nID }}
+                </li>
+            <br>
+            </ul>
+        {% endfor %}
+{% endmacro %}
+<!-- Macro for rendering plants ends -->

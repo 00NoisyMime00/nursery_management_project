@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% set active_page = 'view_plants' %}
+{% set role = role|default(none) %}
+{% set plants_list = plants_list|default([('','',''),]) %}
+
+{% from 'macros.html' import render_plants %}
+
+{% block title %}
+    View Plants
+{% endblock %}
+
+{% block content %}
+    {% if role == '2' %}
+        {{ render_plants(plants_list) }}
+    {% endif %}
+{% endblock %}
