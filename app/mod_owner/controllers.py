@@ -23,7 +23,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # import checked_logged_in function
 from app.mod_auth.controllers import check_logged_in
 
-from app.mod_owner.forms import registerNurseryForm
+from app.mod_owner.forms import registerNurseryForm, RegisterWorker
 
 # Define the blueprint: 'customer', set its url prefix: app.url/auth
 mod_owner = Blueprint('owner', __name__, url_prefix='/')
@@ -40,11 +40,12 @@ def index():
 def add_manager():
     print(check_logged_in(1))
     if check_logged_in(1):
-        if request.method == 'POST':
-            username = request.form['name']
-            emailID = request.form['emailID']
-            password = request.form['password']
-            role = request.form['role']
+        form = RegisterWorker(request.form)
+        if request.method == 'POST' and form.validate():
+            username = form.name.data
+            emailID = form.email.data
+            password = form.password.data
+            role = int(form.role.data)
             error = None
 
             if not username:
@@ -62,7 +63,7 @@ def add_manager():
                 db.session.commit()
                 return redirect(url_for('owner.index'))
 
-        return render_template('owner/add_employee.html', role = str(session['role']))
+        return render_template('owner/add_employee.html',form = form,title = "Add Manager Page", role = str(session['role']))
     return redirect(url_for('landing.index'))
 
 # YET TO ADD FILTERS

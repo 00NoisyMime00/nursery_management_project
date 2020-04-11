@@ -124,7 +124,7 @@ def add_plant():
 
             plantType = plantTypeInfo.query.filter_by(plantTypeName=plantName, nID=nID).first()
             
-            IMG_DIR = os.path.join(BASE_IMG_DIR, '{nID}/{typeID}'.format(nID=nID, typeID=plantType.plantTypeID))
+            IMG_DIR = os.path.join(BASE_IMG_DIR, 'plants/{nID}/{typeID}'.format(nID=nID, typeID=plantType.plantTypeID))
 
             Path(IMG_DIR).mkdir(parents=True, exist_ok=True)
 
