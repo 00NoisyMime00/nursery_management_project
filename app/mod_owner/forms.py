@@ -27,4 +27,3 @@ class RegisterWorker(Form):
         validators.EqualTo('confirm', message='Passwords must match')
     ])
     confirm = PasswordField('Confirm Password') 
-    role = SelectField('Role', choices=[('2','Manager'),('3','Gardener')])

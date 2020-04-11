@@ -110,6 +110,10 @@ def add_plant():
         
         if request.method == 'POST' and nID != None:
             plantName = request.form['pname'].lower()
+
+            if plantTypeInfo.query.filter_by(plantTypeName=plantName, nID=nID).first() is not None:
+                return redirect(url_for('landing.index'))
+
             plant = plantTypeInfo(plantName, nID)
             db.session.add(plant)
             db.session.commit()
@@ -131,9 +135,11 @@ def add_plant():
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 IMG_PATH = os.path.join(IMG_DIR, plantName+'.'+filename.rsplit('.')[1].lower())
+                
                 img = Image.open(BytesIO(file.read()))
-                img = img.resize((250, 250))
+                img = img.resize((250, 200))
                 img.save(IMG_PATH)
+                
                 IMG_PATH = 'static/'+IMG_PATH.split('static/')[1]
                 db.session.add(plantImages(plantType.plantTypeID, IMG_PATH))
                 db.session.commit()

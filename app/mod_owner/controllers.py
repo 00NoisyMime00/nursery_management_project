@@ -45,7 +45,7 @@ def add_manager():
             username = form.name.data
             emailID = form.email.data
             password = form.password.data
-            role = int(form.role.data)
+            role = 2
             error = None
 
             if not username:
@@ -66,12 +66,16 @@ def add_manager():
         return render_template('owner/add_employee.html',form = form,title = "Add Manager Page", role = str(session['role']))
     return redirect(url_for('landing.index'))
 
-# YET TO ADD FILTERS
+# YET TO ADD FILTERS: nurserty, salary, date, performance
 @mod_owner.route('/view_employees', methods=['GET'])
 def view_employees():
     if check_logged_in(1):
-        employee_list = get_employee_list(session['user_id'])
+        
         designation = request.args.get('role', default = '')
+        order = request.args.get('order', default='')
+        status = request.args.get('status', default='')
+
+        employee_list = get_employee_list(session['user_id'], status)
         
         temp = []
         if designation != '' and escape(designation.lower()) in ['gardener', 'manager']:
@@ -79,8 +83,17 @@ def view_employees():
                 if e[2].lower() == escape(designation.lower()):
                     temp.append(e)
             employee_list = temp
+        
         if employee_list == []:
             employee_list.append(('', '', ''))
+        
+        # Filter for ascending order
+        if order == 'asc':
+            return render_template('owner/view_employee.html', role=str(session['role']), employee_list=sorted(employee_list, key=lambda x:x[0]))
+        # Filter for descending order
+        if order == 'desc':
+            return render_template('owner/view_employee.html', role=str(session['role']), employee_list=sorted(employee_list, key=lambda x:x[0])[::-1])
+        
         return render_template('owner/view_employee.html', role = str(session['role']), employee_list = employee_list)
     return redirect(url_for('landing.index'))
 

@@ -2,6 +2,8 @@
 # We will define this inside /app/__init__.py in the next sections.
 from app import db
 
+import enum
+
 from app.mod_owner.models import nurseryInfo
 
 class plantTypeInfo(db.Model):
@@ -36,3 +38,47 @@ class plantImages(db.Model):
     def __repr__(self):
 
         return '<Plant Image: location:{location}>'.format(location=self.imageLink)
+
+class weatherConditionTypes(enum.Enum):
+    
+    SUMMER      = 'summer'
+    WINTER      = 'winter'
+    ALL_SEASON  = 'all season'
+
+class sunlightTypes(enum.Enum):
+
+    MILD        = 'mild'
+    MODERATE    = 'moderate'
+    EXTREME     = 'extreme'
+
+class potSizeTypes(enum.Enum):
+
+    SMALL   = 'small'
+    MEDIUM  = 'meduim'
+    LARGE   = 'large'
+
+class plantTypeDescription(db.Model):
+    __tablename__ = 'plantTypeDescription'
+
+    plantTypeID             = db.Column(db.Integer, db.ForeignKey(plantTypeInfo.plantTypeID), primary_key=True)
+    fertilizer              = db.Column(db.String(100), nullable=False)
+    weatherCondition        = db.Column(db.Enum(weatherConditionTypes), nullable=False)
+    sunlightCondition       = db.Column(db.Enum(sunlightTypes), nullable=False)
+    waterRequirements       = db.Column(db.Integer, nullable=False)
+    potSize                 = db.Column(db.Enum(potSizeTypes), nullable=False)
+    specialRequirements     = db.Column(db.String(100), nullable=True)
+
+    def __init__(self, plantTyepID, fertilizer, weatherCondition, sunlightCondition, waterRequirements, potSize, specialRequirements=None):
+        
+        self.plantTypeID            = plantTyepID
+        self.fertilizer             = fertilizer
+        self.weatherCondition       = weatherCondition
+        self.sunlightCondition      = sunlightCondition
+        self.waterRequirements      = waterRequirements
+        self.potSize                = potSize
+        self.specialRequirements    = specialRequirements
+
+    def __repr__(self):
+        
+        return '<ID-{id} fertilizer-{fert} weather-{wea} sunlight-{sun} water-{water} pot-{pot} special-{spec}>'\
+            .format(fert=self.fertilizer, wea=self.weatherCondition, sun=self.sunlightCondition, water=self.waterRequirements, pot=self.potSize, spec=self.specialRequirements)

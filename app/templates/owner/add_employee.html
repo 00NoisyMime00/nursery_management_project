@@ -13,7 +13,7 @@
     
         <div style = "padding: 2%;"class="jumbotron h1 text-center">
             Nusery Mangement Simplified
-            <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">Add your Employees</p>
+            <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">Add Manager</p>
         </div>
             
         <div class="container">
@@ -23,7 +23,6 @@
                 {{ render_field(form.email,placeholder = "Employee Email",class = "form-control") }}
                 {{ render_field(form.password,placeholder = "Enter a secure password",class = "form-control") }}
                 {{ render_field(form.confirm,placeholder = "Re-Enter Password",class = "form-control") }}
-                {{ render_field(form.role,placeholder = "Select Role",class = "form-control") }}
             </dl>
             <p><input type=submit value="   Add   " class="btn btn-info mt-2"></p>
             </form>

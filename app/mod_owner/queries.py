@@ -9,8 +9,28 @@ from app.mod_owner.models import employeeInfo, nurseryInfo, nurseryAddress, nurs
 from markupsafe import escape
 
 # Gives employee detials of all employees under an owner
-def get_employee_list(ownerID):
-    employee_id_list = employeeInfo.query.filter_by(ownerID = ownerID).all()
+def get_employee_list(ownerID, status=''):
+    manager_id_list = employeeInfo.query.filter_by(ownerID = ownerID).all()
+    employee_id_list = manager_id_list
+
+    unassigned_managers = []
+    assigned_managers = []
+    gardeners_list = []
+
+    for manager in manager_id_list:
+        if nurseryStaff.query.filter_by(eID=manager.eID).first() is not None:
+            gardeners_list += employeeInfo.query.filter_by(ownerID = manager.eID).all()
+            assigned_managers.append(manager)
+        else:
+            unassigned_managers.append(manager)
+    
+    if status == 'assigned':
+        employee_id_list = assigned_managers + gardeners_list
+    elif status == 'unassigned':
+        employee_id_list = unassigned_managers
+    else:
+        employee_id_list = manager_id_list + gardeners_list
+
     employee_details_list = []
     
     for employee_id in employee_id_list:
