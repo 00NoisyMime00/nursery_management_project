@@ -11,6 +11,10 @@
 
 {% block content %}
     {% if role == '2' %}
-        {{ render_plants(plants_list) }}
+        {% if plants_list != [('', '', ''),] %}
+            {{ render_plants(plants_list) }}
+        {% else %}
+            <h1>NO plant exists.</h1>
+        {% endif %}
     {% endif %}
 {% endblock %}

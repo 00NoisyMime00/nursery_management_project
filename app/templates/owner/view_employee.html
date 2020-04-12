@@ -12,14 +12,17 @@
 
 {% block content %}
     {% if role == '1' %}
-    <!-- Sort by button -->
-      <div class="row-fluid">
-        <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#sortEmployee" style="float: right;">Filter
-          </button>
+      <div style = "padding: 2%; margin: 1%; "class="jumbotron h1 text-center">
+        Your Employees
       </div>
-
+  
+      <!-- Sort by button -->
+      <div class="row-fluid" style = "padding: 1%;">
+        <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#sortEmployee" style="float: right;">Filter</button>
+      </div>
+      
       <div class ="row">
-        <div class="col-md-8" style="overflow-y: scroll;">
+        <div class="col-md-8" style="overflow-y: scroll; margin: auto">
           <div class="container-fluid">
             {{ render_employees(employee_list) }}
           </div>
@@ -32,38 +35,38 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalPreviewLabel">Sort By</h5>
+            <h5 class="modal-title text-dark" id="exampleModalPreviewLabel">Filter</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body btn-block">
             <label>Designation</label>
-            <div class="btn-group" role="groupDesignation" aria-label="Designation">
-              <button type="button" class="btn btn-secondary" onclick="modalRole('any')">Any</button>
-              <button type="button" class="btn btn-secondary" onclick="modalRole('manager')">Manager</button>
-              <button type="button" class="btn btn-secondary" onclick="modalRole('gardener')">Gardener</button>
+            <div role="groupDesignation" aria-label="Designation">
+              <button type="button" class="btn btn-info" onclick="modalRole('any')">Any</button>
+              <button type="button" class="btn btn-info" onclick="modalRole('manager')">Manager</button>
+              <button type="button" class="btn btn-info" onclick="modalRole('gardener')">Gardener</button>
             </div>
             <br>
             <label>Rating</label>
-            <div class="btn-group" role="groupRating" aria-label="Rating">
-              <button type="button" class="btn btn-secondary" onclick="modalOrder('')">None</button>
-              <button type="button" class="btn btn-secondary" onclick="modalOrder('asc')">Ascending</button>
-              <button type="button" class="btn btn-secondary" onclick="modalOrder('desc')">Descending</button>
+            <div role="groupRating" aria-label="Rating">
+              <button type="button" class="btn btn-info" onclick="modalOrder('')">None</button>
+              <button type="button" class="btn btn-info" onclick="modalOrder('asc')">Ascending</button>
+              <button type="button" class="btn btn-info" onclick="modalOrder('desc')">Descending</button>
             </div>
             <br> 
             <label>Nurseries</label>
-            <div class="btn-group" role="groupRating" aria-label="Rating">
-              <button type="button" class="btn btn-secondary" onclick="modalAssigned('')">All</button>
-              <button type="button" class="btn btn-secondary" onclick="modalAssigned('assigned')">Assigned</button>
-              <button type="button" class="btn btn-secondary" onclick="modalAssigned('unassigned')">Unassigned</button>
+            <div role="groupRating" aria-label="Rating">
+              <button type="button" class="btn btn-info" onclick="modalAssigned('')">All</button>
+              <button type="button" class="btn btn-info" onclick="modalAssigned('assigned')">Assigned</button>
+              <button type="button" class="btn btn-info" onclick="modalAssigned('unassigned')">Unassigned</button>
             </div>
             <br>
             <!-- Fixme -->
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="modalSaved()">Save changes</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success" onclick="modalSaved()">Save changes</button>
           </div>
         </div>
       </div>
