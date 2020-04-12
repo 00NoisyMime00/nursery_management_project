@@ -14,6 +14,41 @@
         <form method="POST" enctype=multipart/form-data action="{{ url_for('manager.add_plant') }}">
             <label for="name">Plant Name:</label><br>
             <input type="text" id="pname" name="pname" required><br>
+
+            <label for="name">Fertilizer:</label><br>
+            <input type="text" id="fertilizer" name="fertilizer" required><br>
+
+            <label for="name">Weather Conditions:</label><br>
+            <input type="radio" id="summer" name="weather" value="summer" required>
+            <label for="summer">Summer</label><br>
+            <input type="radio" id="winter" name="weather" value="winter"required>
+            <label for="summer">Winter</label><br>
+            <input type="radio" value="all season" name="weather" required>
+            <label for="summer">All Season</label><br><br>
+
+            <label for="name">Sunlight Conditions:</label><br>
+            <input type="radio" value="mild" name="sunlight" required>
+            <label for="mild">Mild</label><br>
+            <input type="radio" value="moderate" name="sunlight" required>
+            <label for="moderate">Moderate</label><br>
+            <input type="radio" value="extreme" name="sunlight" required>
+            <label for="summer">Extreme</label><br><br>
+
+            <label for="name">Pot Size:</label><br>
+            <input type="radio" value="small" name="potsize" required>
+            <label for="mild">small</label><br>
+            <input type="radio" value="medium" name="potsize" required>
+            <label for="moderate">Medium</label><br>
+            <input type="radio" value="large" name="potsize" required>
+            <label for="summer">Large</label><br><br>
+
+            <label for="water">Water Input(ml):</label><br>
+            <input type="number" name='water'><br><br>
+
+            <!-- Not always required -->
+            <label for="name">Special Requirements:</label><br>
+            <textarea name="special" id="special" cols="40" rows="4"></textarea><br><br>
+
             <label for="image">Choose Image:</label><br>
             <input type=file id="img" name="img" required><br><br>
 

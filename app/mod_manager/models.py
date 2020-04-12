@@ -81,4 +81,4 @@ class plantTypeDescription(db.Model):
     def __repr__(self):
         
         return '<ID-{id} fertilizer-{fert} weather-{wea} sunlight-{sun} water-{water} pot-{pot} special-{spec}>'\
-            .format(fert=self.fertilizer, wea=self.weatherCondition, sun=self.sunlightCondition, water=self.waterRequirements, pot=self.potSize, spec=self.specialRequirements)
+            .format(id=self.plantTypeID,fert=self.fertilizer, wea=self.weatherCondition, sun=self.sunlightCondition, water=self.waterRequirements, pot=self.potSize, spec=self.specialRequirements)

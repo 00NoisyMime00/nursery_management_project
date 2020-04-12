@@ -18,7 +18,7 @@ from app.mod_auth.models import User
 # Import employeeInfo model for Manager and gardener
 from app.mod_owner.models import employeeInfo, nurseryStaff
 
-from app.mod_manager.models import plantTypeInfo, plantImages
+from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescription
 
 from app.mod_manager.queries import get_gardeners
 
@@ -98,6 +98,7 @@ def view_gardeners():
             return render_template("manager/view_gardeners.html", role = str(session['role']), employee_list = gardener_list)
     return redirect(url_for('landing.index'))
 
+# Helper function for uploaded Images
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -110,12 +111,25 @@ def add_plant():
         
         if request.method == 'POST' and nID != None:
             plantName = request.form['pname'].lower()
+            fertilizer = request.form['fertilizer'].lower()
+            weather = request.form['weather'].lower()
+            water = int(request.form['water'])
+            sunlight = request.form['sunlight'].lower()
+            potsize = request.form['potsize'].lower()
+            special = request.form['special'].lower()
+            
+            if special == None:
+                special = 'None'
 
             if plantTypeInfo.query.filter_by(plantTypeName=plantName, nID=nID).first() is not None:
                 return redirect(url_for('landing.index'))
 
             plant = plantTypeInfo(plantName, nID)
             db.session.add(plant)
+            db.session.commit()
+
+            description = plantTypeDescription(plant.plantTypeID, fertilizer, weather, sunlight, water, potsize, special)
+            db.session.add(description)
             db.session.commit()
 
             if 'img' not in request.files:

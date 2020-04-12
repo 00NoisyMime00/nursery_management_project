@@ -11,6 +11,62 @@
 
 {% block content %}
     {% if role == '2' %}
-        {{ render_employees(employee_list) }}
+        <div style = "padding: 2%;"class="jumbotron h1 text-center">
+            Nusery Mangement Simplified
+            <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">View Gardeners</p>
+        </div>
+
+        <!-- Sort by button -->
+      <div class="row-fluid">
+        <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#sortEmployee" style="float: right;">Filter
+          </button>
+      </div>
+
+      <div class ="row">
+        <div class="col-md-8" style="overflow-y: scroll;">
+          <div class="container-fluid">
+            {{ render_employees(employee_list) }}
+          </div>
+        </div>
+
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade right" id="sortEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalPreviewLabel">Sort By</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <label>Designation</label>
+            <br>
+            <label>Rating</label>
+            <div class="btn-group" role="groupRating" aria-label="Rating">
+              <button type="button" class="btn btn-secondary" onclick="modalOrder('')">None</button>
+              <button type="button" class="btn btn-secondary" onclick="modalOrder('asc')">Ascending</button>
+              <button type="button" class="btn btn-secondary" onclick="modalOrder('desc')">Descending</button>
+            </div>
+            <br> 
+            <label>Nurseries</label>
+            <div class="btn-group" role="groupRating" aria-label="Rating">
+              <button type="button" class="btn btn-secondary" onclick="modalAssigned('')">All</button>
+              <button type="button" class="btn btn-secondary" onclick="modalAssigned('assigned')">Assigned</button>
+              <button type="button" class="btn btn-secondary" onclick="modalAssigned('unassigned')">Unassigned</button>
+            </div>
+            <br>
+            <!-- Fixme -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="">Save changes</button>
+          </div>
+        </div>
+      </div>
+        {#{{ render_employees(employee_list) }}#}
+      </div>  
     {% endif %}
 {% endblock %}
