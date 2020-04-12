@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% set active_page = 'view_plant_types' %}
 {% set role = role|default(none) %}
-{% set plant_type_list = plant_type_list|default([('','',''),]) %}
+{% set plant_type_list = plant_type_list|default([]) %}
 
 {% from 'macros.html' import render_plant_types %}
 
@@ -27,6 +27,48 @@
                 {{ render_plant_types(plant_type_list) }}
               </div>
             </div>
+        </div>
+
+        <!-- Modal -->
+      <div class="modal fade right" id="sortEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-dark" id="exampleModalPreviewLabel">Filter</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body btn-block">
+              <label>Designation</label>
+              <div role="groupDesignation" aria-label="Designation">
+                <button type="button" class="btn btn-info" onclick="">Any</button>
+                <button type="button" class="btn btn-info" onclick="">Manager</button>
+                <button type="button" class="btn btn-info" onclick="">Gardener</button>
+              </div>
+              <br>
+              <label>Rating</label>
+              <div role="groupRating" aria-label="Rating">
+                <button type="button" class="btn btn-info" onclick="">None</button>
+                <button type="button" class="btn btn-info" onclick="">Ascending</button>
+                <button type="button" class="btn btn-info" onclick="">Descending</button>
+              </div>
+              <br> 
+              <label>Nurseries</label>
+              <div role="groupRating" aria-label="Rating">
+                <button type="button" class="btn btn-info" onclick="">All</button>
+                <button type="button" class="btn btn-info" onclick="">Assigned</button>
+                <button type="button" class="btn btn-info" onclick="">Unassigned</button>
+              </div>
+              <br>
+              <!-- Fixme -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" onclick="">Save changes</button>
+            </div>
+          </div>
+        </div>
         </div>
 
     {% endif %}

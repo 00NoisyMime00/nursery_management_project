@@ -20,7 +20,11 @@ from app.mod_owner.models import employeeInfo, nurseryStaff
 
 from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescription, plantTypeUses
 
+from app.mod_gardener.models import seedTypeInfo
+
 from app.mod_manager.queries import get_gardeners
+
+from app.mod_gardener.queries import get_complete_plant_description
 
 # Import module forms
 from app.mod_auth.forms import LoginForm
@@ -151,6 +155,9 @@ def add_plant():
             db.session.add(plant)
             db.session.commit()
 
+            db.session.add(seedTypeInfo(plant.plantTypeID))
+            db.session.commit()
+
             description = plantTypeDescription(plant.plantTypeID, fertilizer, weather, sunlight, water, potsize, special)
             db.session.add(description)
             db.session.commit()
@@ -199,16 +206,13 @@ def view_plants():
 
         if nID != None:
             nID = nID.nID
-            plants_list = plantTypeInfo.query.filter_by(nID=nID).all()
-            
-            plant_details_list = []
-            
-            for plant in plants_list:
-                plant_details_list.append((plant.plantTypeName, plant.nID).__add__((plantImages.query.with_parent(plant).first().imageLink,)) )
-            
-            if plant_details_list == []:
-                plant_details_list = [('','',''),]
-            return render_template('manager/view_plants.html',role=str(session['role']), plants_list=plant_details_list)
+            plant_type_list = plantTypeInfo.query.filter_by(nID=nID).all()
+            plant_description_list = []
+            for plant in plant_type_list:
+                plant_description = get_complete_plant_description(plant.plantTypeID)
+                plant_description_list.append(plant_description)
+            return render_template('manager/view_plants.html', role=str(session['role']), plant_type_list=plant_description_list)
+
         return render_template('manager/not_assigned.html', role=str(session['role']))
 
     return redirect(url_for('landing.index'))

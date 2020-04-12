@@ -5,6 +5,7 @@ from app import db
 import enum
 
 from app.mod_manager.models import plantTypeInfo
+from app.mod_owner.models import nurseryInfo
 
 class seedTypeInfo(db.Model):
     __tablename__ = 'seedTypeInfo'
@@ -40,6 +41,23 @@ class seedBatchInfo(db.Model):
         return '<Batch id-{bid} seed type id-{sid} batch size-{s} cost-{c}>'\
             .format(bid=self.seedBatchID, sid=self.seedTypeID, s=self.batchSize, c=self.batchCost)
 
+class seedAvailable(db.Model):
+    __tablename__ = 'seedAvailable'
+
+    seedBatchID     = db.Column(db.Integer, db.ForeignKey(seedBatchInfo.seedBatchID), primary_key=True)
+    nID             = db.Column(db.Integer, db.ForeignKey(nurseryInfo.nID), primary_key=True)
+    quantity        = db.Column(db.Integer, db.CheckConstraint('quantity >= 0'), nullable=False)
+
+    def __init__(self, seedBatchID, nID, quantity):
+
+        self.seedBatchID    = seedBatchID
+        self.nID            = nID
+        self.quantity       = quantity
+    
+    def __repr__(self):
+
+        return '<seed batch id-{id} nid-{nid} quantity-{q}>'.format(id=self.seedBatchID, nid=self.nID, q=self.quantity)
+
 class plantStatus(enum.Enum):
 
     GROWING         = 0
@@ -62,7 +80,7 @@ class plantInfo(db.Model):
         self.plantTypeID = plantTypeID
         self.seedBatchID = seedBatchID
         self.plantColour = plantColour
-        self.plantStatus = plantStatus
+        self.plantStatus = 0
 
     def __repr__(self):
 

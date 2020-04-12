@@ -10,6 +10,8 @@ from app.mod_owner.models import nurseryStaff
 
 from app.mod_manager.models import plantTypeInfo
 
+from app.mod_gardener.queries import get_complete_plant_description
+
 # import checked_logged_in function
 from app.mod_auth.controllers import check_logged_in
 
@@ -28,4 +30,11 @@ def view_plant_types():
     if check_logged_in(3):
         nID = nurseryStaff.query.filter_by(eID=session['user_id']).first().nID
         plant_type_list = plantTypeInfo.query.filter_by(nID=nID).all()
+        plant_description_list = []
+        for plant in plant_type_list:
+            plant_description = get_complete_plant_description(plant.plantTypeID)
+            plant_description_list.append(plant_description)
+        
+        return render_template('gardener/view_plant_types.html', role=str(session['role']), plant_type_list=plant_description_list)
+
     return redirect(url_for('landing.index'))

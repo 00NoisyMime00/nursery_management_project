@@ -43,7 +43,7 @@ class weatherConditionTypes(enum.Enum):
     
     SUMMER      = 'summer'
     WINTER      = 'winter'
-    ALL_SEASON  = 'all season'
+    ALL_SEASON  = 'all_season'
 
 class sunlightTypes(enum.Enum):
 
