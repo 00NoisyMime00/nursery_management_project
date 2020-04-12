@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% set role = role|default(none) %}
+
+{% block titile %}
+    Not Assigned
+{% endblock %}
+
+{% block content %}
+    {% if role == '2' %}
+        <h1>Not assigned to nursery!</h1>
+    {% endif %}
+{% endblock %}

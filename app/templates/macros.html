@@ -94,37 +94,41 @@
 
 <!-- Macro for getting employee list under owner or manager -->
 {% macro render_employees(employee_list, assign='False') %}
-    {% for name, emailID, designation in employee_list %}
-        {% if assign == 'False' %}
-        <div class ="card-deck">
-            <div class = "card text-white bg bg-dark mb-3">
-                <div class="row no-gutters">
-                    <div class ="col-md-4">
-                        <img src ="/static/images/plants/6/15/p1.png"class="card-img" alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-header">
-                            <h3>{{name|title()}}</h3>
+    {% if employee_list != [('', '', ''),] %}
+        {% for name, emailID, designation in employee_list %}
+            {% if assign == 'False' %}
+            <div class ="card-deck">
+                <div class = "card text-white bg bg-dark mb-3">
+                    <div class="row no-gutters">
+                        <div class ="col-md-4">
+                            <img src ="/static/images/plants/6/15/p1.png"class="card-img" alt="...">
                         </div>
-                        <div class="card-body">
-                            <p class="card-text">
-                               {{designation}}<br>{{emailID}}
-                            </p> 
+                        <div class="col-md-8">
+                            <div class="card-header">
+                                <h3>{{name|title()}}</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                {{designation}}<br>{{emailID}}
+                                </p> 
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <a href="#" class="btn btn-danger">Go somewhere</a>  
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                            <a href="#" class="btn btn-danger">Go somewhere</a>  
-                        </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
-        </div>
-        {% else %}
-            <input type="radio" name="assign_manager" id="assign_manager" value={{emailID}} required>
-            {{ name }} - {{ emailID }}</br>
-        {% endif %}
-    {% endfor %}
+            {% else %}
+                <input type="radio" name="assign_manager" id="assign_manager" value={{emailID}} required>
+                {{ name }} - {{ emailID }}</br>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+            <h1>No employee</h1>
+    {% endif %}
 {% endmacro %}
 <!-- employee list macro ends -->
 

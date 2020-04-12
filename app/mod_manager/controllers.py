@@ -59,7 +59,10 @@ def index():
 def add_gardener():
     if check_logged_in(2):
 
-        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first().nID
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
+        if nID != None:
+            nID = nID.nID
+    
         if request.method == 'POST' and nID != None:
             username = request.form['name']
             emailID = request.form['emailID']
@@ -84,18 +87,21 @@ def add_gardener():
                 return redirect(url_for('manager.index'))
         if nID != None:
             return render_template('manager/add_gardener.html', role=str(session['role']), assigned='True')
+        return render_template('manager/not_assigned.html', role=str(session['role']))
     return redirect(url_for('landing.index'))
 
 @mod_manager.route('view_gardeners', methods=['GET'])
 def view_gardeners():
     if check_logged_in(2):
-        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first().nID
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
         if nID != None:
+            nID = nID.nID
             gardener_list = get_gardeners(nID)
             
             if gardener_list == []:
                 gardener_list = [('', '', ''),]
             return render_template("manager/view_gardeners.html", role = str(session['role']), employee_list = gardener_list)
+        return render_template('manager/not_assigned.html', role=str(session['role']))
     return redirect(url_for('landing.index'))
 
 # Helper function for uploaded Images
@@ -107,9 +113,10 @@ def allowed_file(filename):
 @mod_manager.route('/add_plant', methods=['GET', 'POST'])
 def add_plant():
     if check_logged_in(2):
-        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first().nID
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
         
         if request.method == 'POST' and nID != None:
+            nID = nID.nID
             plantName = request.form['pname'].lower()
             fertilizer = request.form['fertilizer'].lower()
             weather = request.form['weather'].lower()
@@ -158,18 +165,20 @@ def add_plant():
                 db.session.add(plantImages(plantType.plantTypeID, IMG_PATH))
                 db.session.commit()
                 return redirect(url_for('landing.index'))
-            
         
         if nID != None:
+            nID = nID.nID
             return render_template('manager/add_plant.html', role=str(session['role']), assigned='True')
+        return render_template('manager/not_assigned.html', role=str(session['role']))
     return redirect(url_for('landing.index'))
 
 @mod_manager.route('/view_plants', methods=['GET'])
 def view_plants():
     if check_logged_in(2):
-        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first().nID
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
 
         if nID != None:
+            nID = nID.nID
             plants_list = plantTypeInfo.query.filter_by(nID=nID).all()
             
             plant_details_list = []
@@ -179,7 +188,7 @@ def view_plants():
             
             if plant_details_list == []:
                 plant_details_list = [('','',''),]
-            print('sending', plant_details_list)
             return render_template('manager/view_plants.html',role=str(session['role']), plants_list=plant_details_list)
+        return render_template('manager/not_assigned.html', role=str(session['role']))
 
     return redirect(url_for('landing.index'))
