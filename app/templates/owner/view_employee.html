@@ -16,7 +16,7 @@
         Your Employees
       </div>
   
-      <!-- Sort by button -->
+      <!-- Filter button -->
       <div class="row-fluid" style = "padding: 1%;">
         <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#sortEmployee" style="float: right;">Filter</button>
       </div>
@@ -27,8 +27,7 @@
             {{ render_employees(employee_list) }}
           </div>
         </div>
-
-    </div>
+      </div>
     
     <!-- Modal -->
     <div class="modal fade right" id="sortEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">

@@ -28,6 +28,7 @@ from app.mod_landing.controllers import mod_landing as landing_module
 from app.mod_customer.controllers import mod_customer as customer_module
 from app.mod_owner.controllers import mod_owner as owner_module
 from app.mod_manager.controllers import mod_manager as manager_module
+from app.mod_gardener.controllers import mod_gardener as gardener_module
 
 # Register blueprint(s)
 app.register_blueprint(auth_module)
@@ -35,6 +36,7 @@ app.register_blueprint(landing_module)
 app.register_blueprint(customer_module)
 app.register_blueprint(owner_module)
 app.register_blueprint(manager_module)
+app.register_blueprint(gardener_module)
 
 # app.register_blueprint(xyz_module)
 # ..

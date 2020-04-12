@@ -18,7 +18,7 @@ from app.mod_auth.models import User
 # Import employeeInfo model for Manager and gardener
 from app.mod_owner.models import employeeInfo, nurseryStaff
 
-from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescription
+from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescription, plantTypeUses
 
 from app.mod_manager.queries import get_gardeners
 
@@ -124,6 +124,22 @@ def add_plant():
             sunlight = request.form['sunlight'].lower()
             potsize = request.form['potsize'].lower()
             special = request.form['special'].lower()
+            uses = request.form.getlist('uses')
+
+            cosmetic    = False
+            medicinal   = False
+            decorative  = False
+            edible      = False
+
+            for use in uses:
+                if 'cosmetic' == use:
+                    cosmetic = True
+                elif 'medicinal' == use:
+                    medicinal = True
+                elif 'decorative' == use:
+                    decorative = True
+                elif 'edible' == use:
+                    edible = True
             
             if special == None:
                 special = 'None'
@@ -137,6 +153,10 @@ def add_plant():
 
             description = plantTypeDescription(plant.plantTypeID, fertilizer, weather, sunlight, water, potsize, special)
             db.session.add(description)
+            db.session.commit()
+
+            plantUses = plantTypeUses(plant.plantTypeID, cosmetic, medicinal, decorative, edible)
+            db.session.add(plantUses)
             db.session.commit()
 
             if 'img' not in request.files:

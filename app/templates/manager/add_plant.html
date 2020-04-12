@@ -49,10 +49,18 @@
             <label for="name">Special Requirements:</label><br>
             <textarea name="special" id="special" cols="40" rows="4"></textarea><br><br>
 
+            <p><strong>Select Plant Uses. You may control-click (Windows) or command-click (Mac) to select more than one.</strong></p>
+            <select name="uses" multiple size="4" required>
+                <option value="cosmetic">Cosmetic</option>
+                <option value="medicinal">Medicinal</option>
+                <option value="decorative">Decorative</option>
+                <option value="edible">Edible</option>
+            </select><br><br>
+
             <label for="image">Choose Image:</label><br>
             <input type=file id="img" name="img" required><br><br>
 
-            <button type="submit" name="submit" value=upload>Create</button>
+            <button type="submit" name="submit" value=upload>Create</button><br>   
         </form>
     {% else %}
         <h1>No nursery assigned yet.</h1>

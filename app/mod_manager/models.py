@@ -82,3 +82,25 @@ class plantTypeDescription(db.Model):
         
         return '<ID-{id} fertilizer-{fert} weather-{wea} sunlight-{sun} water-{water} pot-{pot} special-{spec}>'\
             .format(id=self.plantTypeID,fert=self.fertilizer, wea=self.weatherCondition, sun=self.sunlightCondition, water=self.waterRequirements, pot=self.potSize, spec=self.specialRequirements)
+
+class plantTypeUses(db.Model):
+    __tablename__ = 'plantTypeUses'
+
+    plantTypeID = db.Column(db.Integer, db.ForeignKey(plantTypeInfo.plantTypeID), primary_key=True)
+    cosmetic    = db.Column(db.Boolean, nullable=False, default=False)
+    medicinal   = db.Column(db.Boolean, nullable=False, default=False)
+    decorative  = db.Column(db.Boolean, nullable=False, default=False)
+    edible      = db.Column(db.Boolean, nullable=False, default=False)
+
+    def __init__(self, plantTyepID, cosmetic=False, medicinal=False, decorative=False, edible=False):
+
+        self.plantTypeID    = plantTyepID
+        self.cosmetic       = cosmetic
+        self.medicinal      = medicinal
+        self.decorative     = decorative
+        self.edible         = edible
+
+    def __repr__(self):
+
+        return '<id-{id} cosmetic-{c} medicinal-{m} decorative-{d} edible-{e}>'\
+            .format(id=self.plantTypeID, c=self.cosmetic, m=self.medicinal, d=self.decorative, e=self.edible)
