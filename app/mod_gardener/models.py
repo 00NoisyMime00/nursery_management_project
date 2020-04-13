@@ -21,6 +21,39 @@ class seedTypeInfo(db.Model):
 
         return '<Seed Type Id-{id} plant Type ID-{pid}>'.format(id=self.seedTypeID, pid=self.plantTypeID)
 
+class vendorInfo(db.Model):
+    __tablename__ = 'vendorInfo'
+
+    vendorID    = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    vendorName  = db.Column(db.String(120), nullable=False)
+    nID         = db.Column(db.Integer, db.ForeignKey(nurseryInfo.nID), primary_key=True)
+
+    def __init__(self, vendorName, nID):
+
+        self.vendorName = vendorName
+        self.nID        = nID
+    
+    def __repr__(self):
+
+        return '<vendor name-{name} nID-{nid} vendor id-{id}>'.format(name=self.vendorName, nid=self.nID, id=self.vendorID)
+
+class vendorSeedInfo(db.Model):
+    __tablename__ = 'vendorSeedInfo'
+
+    seedTypeID = db.Column(db.Integer, db.ForeignKey(seedTypeInfo.seedTypeID), primary_key=True)
+    vendorID   = db.Column(db.Integer, db.ForeignKey(vendorInfo.vendorID), primary_key=True)
+    seedCost   = db.Column(db.Numeric(10, 2), nullable=False)
+
+    def __init__(self, seedTypeID, vendorID, seedCost):
+
+        self.seedTypeID     = seedTypeID
+        self.vendorID       = vendorID
+        self.seedCost       = seedCost
+
+    def __repr__(self):
+
+        return '<seed type id-{sid} vendor id-{vid} seed cost-{cost}>'.format(sid=self.seedTypeID, vid=self.vendorID, cost=self.seedCost)
+
 class seedBatchInfo(db.Model):
     __tablename__ = 'seedBatchInfo'
 

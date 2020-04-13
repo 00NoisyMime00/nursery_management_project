@@ -109,7 +109,6 @@ def add_nursery():
             country     = form.country.data
             labour      = form.labour.data
             maintenance = form.maintenance.data
-            print(pincode, city, country, labour,'<<<<<<<<<')
             if pincode != None or city != None or country != None or labour != None or maintenance != None:
                 temp = nurseryInfo(ownerID=int(session['user_id']), maintenanceCost=maintenance, labourCost=labour)
                 db.session.add(temp)

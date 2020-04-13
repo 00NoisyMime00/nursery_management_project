@@ -8,6 +8,7 @@ def get_complete_plant_description(pID):
     description = {}
     
     plant = plantTypeInfo.query.filter_by(plantTypeID=pID).first()
+    description['id']       = pID
     description['name']     = plant.plantTypeName
     description['image']    = plantImages.query.filter_by(plantTypeID=plant.plantTypeID).first().imageLink
     
@@ -27,6 +28,6 @@ def get_complete_plant_description(pID):
     for seedType in seed_type_list:
         seed_batch_list = seedBatchInfo.query.filter_by(seedTypeID=seedType.seedTypeID).all()
         for seedBatch in seed_batch_list:
-            description['seedsAvailabe'] += seedAvailable.query.filter_by(seedBatchID=seedBatch.seedBatchID, nID=plant.nID).first().quantity
+            description['seedsAvailable'] += seedAvailable.query.filter_by(seedBatchID=seedBatch.seedBatchID, nID=plant.nID).first().quantity
     
     return description

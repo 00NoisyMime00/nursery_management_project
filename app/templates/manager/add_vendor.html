@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% set active_page = 'add_vendor' %}
+{% set role = role|default(none) %}
+{% set plant_type_list = plant_type_list|default([]) %}
+{% from 'macros.html' import render_plants_for_vendor %}
+
+{% block titile %}
+    Add Vendor
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        <label for="name">Vendor Name:</label>
+        <input type="text" name="name" required><br><br>
+
+        <label >Seeds Available:</label>
+        <ul class="list-group list-group-flush">
+            {{ render_plants_for_vendor(plant_type_list) }}    
+        </ul>
+        <button type="submit">Add Vendor</button>
+    </form>
+{% endblock %}

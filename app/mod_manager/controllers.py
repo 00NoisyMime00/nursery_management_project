@@ -20,9 +20,9 @@ from app.mod_owner.models import employeeInfo, nurseryStaff
 
 from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescription, plantTypeUses
 
-from app.mod_gardener.models import seedTypeInfo
+from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorInfo, vendorSeedInfo
 
-from app.mod_manager.queries import get_gardeners
+from app.mod_manager.queries import get_gardeners, get_vendors
 
 from app.mod_gardener.queries import get_complete_plant_description
 
@@ -155,9 +155,6 @@ def add_plant():
             db.session.add(plant)
             db.session.commit()
 
-            db.session.add(seedTypeInfo(plant.plantTypeID))
-            db.session.commit()
-
             description = plantTypeDescription(plant.plantTypeID, fertilizer, weather, sunlight, water, potsize, special)
             db.session.add(description)
             db.session.commit()
@@ -210,9 +207,77 @@ def view_plants():
             plant_description_list = []
             for plant in plant_type_list:
                 plant_description = get_complete_plant_description(plant.plantTypeID)
+                plant_description['vendors_list'] = get_vendors(plant.plantTypeID, nID)
                 plant_description_list.append(plant_description)
             return render_template('manager/view_plants.html', role=str(session['role']), plant_type_list=plant_description_list)
 
         return render_template('manager/not_assigned.html', role=str(session['role']))
 
+    return redirect(url_for('landing.index'))
+
+@mod_manager.route('/buy_seeds', methods=['POST'])
+def buy_seeds():
+    if check_logged_in(2):
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
+        if nID != None:
+            nID = nID.nID
+            if request.method == 'POST' and 'checkbox' in request.form:
+                print(request.form, "<<<<<<<<<<<")
+                data = request.form.getlist('checkbox')
+
+                for vendor in data:
+                    vendorID = int(vendor.split('_')[0])
+                    plantTypeID = int(vendor.split('_')[1])
+                    
+                    quantity = request.form["quantity"+str(vendorID)]
+                    if quantity != '':
+                        quantity = int(quantity)
+                        seedTypes = seedTypeInfo.query.filter_by(plantTypeID=plantTypeID).all()
+                        for seedType in seedTypes:
+                            if vendorSeedInfo.query.filter_by(vendorID=vendorID, seedTypeID=seedType.seedTypeID).first() != None:
+                                seedBatch = seedBatchInfo(seedType.seedTypeID, quantity, quantity*vendorSeedInfo.query\
+                                    .filter_by(vendorID=vendorID, seedTypeID=seedType.seedTypeID).first().seedCost)
+                                db.session.add(seedBatch)
+                                db.session.commit()
+
+                                db.session.add(seedAvailable(seedBatch.seedBatchID, nID, quantity))
+                                db.session.commit()
+
+                return redirect(url_for('landing.index'))
+        return render_template('manager/not_assigned.html', role=str(session['role']))
+    return redirect(url_for('landing.index'))
+
+@mod_manager.route('/add_vendor', methods=['GET', 'POST'])
+def add_vendor():
+    if check_logged_in(2):
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
+        if nID != None:
+            nID = nID.nID
+            if request.method == 'POST':
+                plants_sold_id = request.form.getlist('checkbox')
+
+                vendor = vendorInfo(request.form['name'], nID)
+                db.session.add(vendor)
+                db.session.commit()
+                for plant_id in plants_sold_id:
+                    cost = request.form[plant_id]
+                    if cost != '':
+                        cost = int(cost)
+        
+                        seed_type = seedTypeInfo(int(plant_id))
+                        db.session.add(seed_type)
+                        db.session.commit()
+
+                        db.session.add(vendorSeedInfo(seed_type.seedTypeID, vendor.vendorID, cost))
+                        db.session.commit()
+
+                return redirect(url_for('landing.index'))
+
+            plant_type_list = plantTypeInfo.query.filter_by(nID=nID).all()
+            plant_description_list = []
+            for plant in plant_type_list:
+                plant_description = get_complete_plant_description(plant.plantTypeID)
+                plant_description_list.append(plant_description)
+            return render_template('manager/add_vendor.html', role=str(session['role']), plant_type_list=plant_description_list)
+        return render_template('manager/not_assigned.html', role=str(session['role']))
     return redirect(url_for('landing.index'))
