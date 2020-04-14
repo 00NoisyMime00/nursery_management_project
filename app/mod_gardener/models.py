@@ -95,11 +95,11 @@ class seedAvailable(db.Model):
 
 class plantStatus(enum.Enum):
 
-    GROWING         = 0
-    GROWN           = 1
-    SOLD            = 2
-    DEAD            = 3
-    NEEDS_ATTENTION = 4
+    GROWING         = 'Growing'
+    GROWN           = 'Grown'
+    SOLD            = 'Sold'
+    DEAD            = 'Dead'
+    NEEDS_ATTENTION = 'Needs Attention'
 
 class plantInfo(db.Model):
     __tablename__ = 'plantInfo'
@@ -109,6 +109,7 @@ class plantInfo(db.Model):
     seedBatchID     = db.Column(db.Integer, db.ForeignKey(seedBatchInfo.seedBatchID), nullable=False)
     plantColour     = db.Column(db.String(50), nullable=False)
     plantStatus     = db.Column(db.Enum(plantStatus), nullable=False)
+    dateSown        = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     def __init__(self, plantTypeID, seedBatchID, plantColour,  plantStatus):
         

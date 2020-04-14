@@ -13,7 +13,7 @@ from app.mod_owner.models import nurseryStaff
 
 from app.mod_manager.models import plantTypeInfo
 
-from app.mod_gardener.queries import get_complete_plant_description, get_seeds_to_sow
+from app.mod_gardener.queries import get_complete_plant_description, get_seeds_to_sow, get_plants_assigned
 
 # import checked_logged_in function
 from app.mod_auth.controllers import check_logged_in
@@ -73,4 +73,33 @@ def sow_seeds():
                         gardener = gardenerOfPlant(plant.pID, session['user_id'])
                         db.session.add(gardener)
                         db.session.commit()
+    return redirect(url_for('landing.index'))
+
+@mod_gardener.route('/view_plants_assigned', methods=['GET'])
+def view_plants_assigned():
+    if check_logged_in(3):
+        plants_list = get_plants_assigned(session['user_id'])
+        return render_template('gardener/view_plants_assigned.html', role=str(session['role']), plants_list=plants_list)
+    return redirect(url_for('landing.index'))
+
+@mod_gardener.route('/change_status')
+def change_status():
+    if check_logged_in(3):
+        pID = request.args.get('id', default='')
+        status = request.args.get('status', default='')
+
+        if pID != '' and status in ['growing', 'grown', 'sold', 'dead', 'needs_attention']:
+            plant = plantInfo.query.filter_by(pID=int(pID)).first()
+            if status == 'growing':
+                plant.plantStatus = plantStatus.GROWING
+            elif status == 'grown':
+                plant.plantStatus = plantStatus.GROWN
+            elif status == 'sold':
+                plant.plantStatus = plantStatus.SOLD
+            elif status == 'dead':
+                plant.plantStatus = plantStatus.DEAD
+            elif status == 'needs_attention':
+                plant.plantStatus = plantStatus.NEEDS_ATTENTION
+            db.session.commit()
+        return redirect(url_for('gardener.view_plants_assigned'))
     return redirect(url_for('landing.index'))

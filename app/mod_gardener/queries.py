@@ -2,7 +2,7 @@ from app import db
 
 from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeUses
 
-from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorSeedInfo, vendorInfo
+from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorSeedInfo, vendorInfo, gardenerOfPlant, plantInfo
 
 def get_complete_plant_description(pID):
     description = {}
@@ -40,11 +40,27 @@ def get_seeds_to_sow(plantTypeID):
         seed_description = {}
         vendor = vendorSeedInfo.query.filter_by(seedTypeID=seed.seedTypeID).first()
         seed_description['vendor_name'] = vendorInfo.query.filter_by(vendorID=vendor.vendorID).first().vendorName
-        seed_description['cost'] = vendor.seedCost
-        seedBatch = seedBatchInfo.query.filter_by(seedTypeID=seed.seedTypeID).first()
-        seed_description['id'] = seedBatch.seedBatchID
-        seed_description['date'] = seedBatch.dateOfPurchase.date()
-        seed_description['batch_size'] = seedAvailable.query.filter_by(seedBatchID=seedBatch.seedBatchID).first().quantity
+        seed_description['cost']        = vendor.seedCost
+        seedBatch                       = seedBatchInfo.query.filter_by(seedTypeID=seed.seedTypeID).first()
+        seed_description['id']          = seedBatch.seedBatchID
+        seed_description['date']        = seedBatch.dateOfPurchase.date()
+        seed_description['batch_size']  = seedAvailable.query.filter_by(seedBatchID=seedBatch.seedBatchID).first().quantity
         seed_description_list.append(seed_description)
     
     return seed_description_list
+
+def get_plants_assigned(eID):
+    plants_id_list = gardenerOfPlant.query.filter_by(eID=eID).all()
+
+    plants_description_list = []
+    for plant in plants_id_list:
+        plant_description = {}
+        plantObject = plantInfo.query.filter_by(pID=plant.pID).first()
+        plant_description['date_sown']  = plantObject.dateSown.date()
+        plant_description['status']     = plantObject.plantStatus.value
+        plant_description['name']       = plantTypeInfo.query.filter_by(plantTypeID=plantObject.plantTypeID).first().plantTypeName
+        plant_description['id']         = plant.pID
+        plant_description['image']      = plantImages.query.filter_by(plantTypeID=plantObject.plantTypeID).first().imageLink
+        plants_description_list.append(plant_description)
+    
+    return plants_description_list

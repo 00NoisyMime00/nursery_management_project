@@ -428,3 +428,50 @@
     {% endfor %}
 {% endmacro %}
 <!-- macro for seeds to sow ends -->
+
+<!-- Macro for plants assigned -->
+{% macro render_plants_assigned(plants_list) %}
+    {% for plant in plants_list %}
+        {% if loop.length != 0 %}
+            <div class ="card-deck">
+                <div class = "card text-white bg bg-dark mb-3">
+                    <div class="row no-gutters">
+                        <div class ="col-md-4">
+                            <img src ="{{ plant['image'] }}" class="card-img" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-header">
+                                <h3>{{plant['name']|title()}}</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                Date Sown: {{ plant['date_sown'] }}<br>
+                                Status: {{ plant['status'] }}
+                                </p> 
+                            </div>
+                            <div class="card-footer btn-group">
+                                <a href="#" class="btn btn-primary">Visit Profile</a>
+                                <div class="dropdown show">
+                                    <a class="btn btn-secondary dropdown-toggle ml-2" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Change Status
+                                    </a>
+                                  
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                      <a class="dropdown-item" href="{{ url_for('gardener.change_status', id=plant['id'], status='growing') }}">Growing</a>
+                                      <a class="dropdown-item" href="{{ url_for('gardener.change_status', id=plant['id'], status='grown') }}">Grown</a>
+                                      <a class="dropdown-item" href="{{ url_for('gardener.change_status', id=plant['id'], status='sold') }}">Sold</a>
+                                      <a class="dropdown-item" href="{{ url_for('gardener.change_status', id=plant['id'], status='dead') }}">Dead</a>
+                                      <a class="dropdown-item" href="{{ url_for('gardener.change_status', id=plant['id'], status='needs_attention') }}">Needs Attention</a>
+                                    </div>
+                                  </div>  
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+<!-- macro for plants assigned ends -->
