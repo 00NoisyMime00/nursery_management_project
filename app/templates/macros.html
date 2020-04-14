@@ -37,6 +37,7 @@
         {% elif role == '3' %}
             {% set dropdown_list = [
                 ('gardener.view_plant_types', 'View Plant Types'),
+                ('gardener.view_plants_assigned', 'View Plants Assigned'),
                 ('auth.signout', 'Signout')
                 ] %}
         {% endif %}
@@ -446,7 +447,8 @@
                             <div class="card-body">
                                 <p class="card-text">
                                 Date Sown: {{ plant['date_sown'] }}<br>
-                                Status: {{ plant['status'] }}
+                                Status: {{ plant['status'] }} <br>
+                                ID: {{ plant['id'] }}
                                 </p> 
                             </div>
                             <div class="card-footer btn-group">
