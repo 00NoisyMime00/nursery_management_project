@@ -5,17 +5,19 @@ from app import db
 import enum
 
 from app.mod_manager.models import plantTypeInfo
-from app.mod_owner.models import nurseryInfo
+from app.mod_owner.models import nurseryInfo, employeeInfo
 
 class seedTypeInfo(db.Model):
     __tablename__ = 'seedTypeInfo'
 
     seedTypeID  = db.Column(db.Integer, primary_key=True)
     plantTypeID = db.Column(db.Integer, db.ForeignKey(plantTypeInfo.plantTypeID), nullable=False)
+    plantColor  = db.Column(db.String(100), default="green", nullable=False)
 
-    def __init__(self, plantTypeID):
+    def __init__(self, plantTypeID, plantColor="green"):
 
         self.plantTypeID = plantTypeID
+        self.plantColor  = plantColor
     
     def __repr__(self):
 
@@ -113,7 +115,7 @@ class plantInfo(db.Model):
         self.plantTypeID = plantTypeID
         self.seedBatchID = seedBatchID
         self.plantColour = plantColour
-        self.plantStatus = 0
+        self.plantStatus = plantStatus
 
     def __repr__(self):
 
@@ -126,10 +128,26 @@ class costToRaise(db.Model):
     pID     = db.Column(db.Integer, db.ForeignKey(plantInfo.pID), primary_key=True)
     cost    = db.Column(db.Numeric(10, 2), nullable=False, default=0)
 
-    def __init__(self, pID):
+    def __init__(self, pID, cost):
 
-        self.pID = pID
+        self.pID    = pID
+        self.cost   = cost
     
     def __repr__(self):
         
         return '<pid-{id} cost-{cost}>'.format(id=self.pID, cost=self.cost)
+
+class gardenerOfPlant(db.Model):
+    __tablename__ = 'gardenerOfPlant'
+
+    pID = db.Column(db.Integer, db.ForeignKey(plantInfo.pID), primary_key=True)
+    eID = db.Column(db.Integer, db.ForeignKey(employeeInfo.eID), primary_key=True)
+
+    def __init__(self, pID, eID):
+
+        self.pID = pID
+        self.eID = eID
+    
+    def __repr__(self):
+
+        return '<pid-{pid} eid-{eid}>'.format(pid=self.pID, eid=self.eID)

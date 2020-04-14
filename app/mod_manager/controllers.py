@@ -222,7 +222,6 @@ def buy_seeds():
         if nID != None:
             nID = nID.nID
             if request.method == 'POST' and 'checkbox' in request.form:
-                print(request.form, "<<<<<<<<<<<")
                 data = request.form.getlist('checkbox')
 
                 for vendor in data:

@@ -212,7 +212,6 @@
                             </div>
                             <div class="card-footer">
                                 <a href="#" class="btn btn-primary">Visit Profile</a>
-                                <a href="#" class="btn btn-success">Add Vendor</a>
                                 <a href="." class="btn btn-danger" data-toggle="modal" data-target="#{{plant['name']}}">Buy Seeds</a>  
                             </div>
                         </div>
@@ -275,13 +274,39 @@
                             </div>
                             <div class="card-footer">
                                 <a href="#" class="btn btn-primary">Go somewhere</a>
-                                <a href="#" class="btn btn-danger">Go somewhere</a>  
+                                <a href="." class="btn btn-danger" data-toggle="modal" data-target="#{{plant['name']}}">Sow Seeds</a>  
                             </div>
                         </div>
 
                     </div>
                 </div>
             </div>
+
+                   <!-- Modal for sow seeds-->
+            <form action="{{ url_for('gardener.sow_seeds')  }}" method="post">
+                <div class="modal fade right" id="{{plant['name']}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-dark" id="exampleModalPreviewLabel">Choose Batch</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body btn-block"> 
+                                <ul>
+                                    {{ render_seeds_to_sow(plant['seeds_list'], plant['id']) }}
+                                </ul>
+                            <!-- Fixme -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success" onclick="">Sow</button>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </form>
         {% endif %}
     {% endfor %}
 {% endmacro %}
@@ -330,39 +355,76 @@
 
 <!-- Macro for choosing vendors -->
 {% macro render_vendors(vendors_list, plant_id) %}
-    
-                {% for vendor in vendors_list %}
-                    {% if loop.length != 0 %}
-                        <li class="list-group-item">
-                            <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="{{ vendor['name'] }}{{plant_id}}" name="checkbox" value="{{ vendor['id'] }}_{{plant_id}}">
-                            <label class="custom-control-label" for="{{ vendor['name'] }}{{plant_id}}" >
-                                    <div class ="card-deck">
-                                        <div class = "card text-white bg bg-dark mb-4">
-                                            <div class="row no-gutters">
-                                                
-                                                <div class="col-md-12">
-                                                    <div class="card-header">
-                                                        <h3>{{vendor['name']|title()}}</h3>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <p class="card-text">
-                                                        Cost: {{vendor['cost']}} (per 1000)
-                                                        </p> 
-                                                    </div>
-                                                    <div class="card-footer">
-                                                        Quantity:
-                                                        <input type="text" name="quantity{{vendor['id']}}" placeholder="Number of seeds(Approx.)">
-                                                    </div>
-                                                </div>
-                                            </div>
+    {% for vendor in vendors_list %}
+        {% if loop.length != 0 %}
+            <li class="list-group-item">
+                <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="{{ vendor['name'] }}{{plant_id}}" name="checkbox" value="{{ vendor['id'] }}_{{plant_id}}">
+                <label class="custom-control-label" for="{{ vendor['name'] }}{{plant_id}}" >
+                        <div class ="card-deck">
+                            <div class = "card text-white bg bg-dark mb-4">
+                                <div class="row no-gutters">
+                                    
+                                    <div class="col-md-12">
+                                        <div class="card-header">
+                                            <h3>{{vendor['name']|title()}}</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text">
+                                            Cost: {{vendor['cost']}} (per 1000)
+                                            </p> 
+                                        </div>
+                                        <div class="card-footer">
+                                            Quantity:
+                                            <input type="text" name="quantity{{vendor['id']}}" placeholder="Number of seeds(Approx.)">
                                         </div>
                                     </div>
-                            </label>
+                                </div>
                             </div>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-          
+                        </div>
+                </label>
+                </div>
+            </li>
+        {% endif %}
+    {% endfor %}
 {% endmacro %}
 <!-- End macro for vendors -->
+
+<!-- Macro for seeds to sow -->
+{% macro render_seeds_to_sow(seeds_list, plant_id) %}
+    {% for seed in seeds_list %}
+        {% if loop.length != 0 %}
+            <li class="list-group-item">
+                <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="{{ seed['vendor_name'] }}{{plant_id}}" name="checkbox" value="{{ seed['id'] }}_{{plant_id}}">
+                <label class="custom-control-label" for="{{ seed['vendor_name'] }}{{plant_id}}" >
+                        <div class ="card-deck">
+                            <div class = "card text-white bg bg-dark mb-4">
+                                <div class="row no-gutters">
+                                    
+                                    <div class="col-md-12">
+                                        <div class="card-header">
+                                            <h3>{{seed['vendor_name']|title()}}</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text">
+                                            Cost: {{seed['cost']}} (per 1000) <br>
+                                            Quantity Available: {{ seed['batch_size'] }} <br>
+                                            Date Of Purchase: {{ seed['date'] }}
+                                            </p> 
+                                        </div>
+                                        <div class="card-footer">
+                                            Quantity:
+                                            <input type="text" name="quantity{{seed['id']}}" placeholder="Number of Plants">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </label>
+                </div>
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+<!-- macro for seeds to sow ends -->

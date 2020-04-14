@@ -2,15 +2,18 @@
 from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for, abort
 
+from app import db
+
 from markupsafe import escape 
 # Import these tables
-from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, plantInfo, plantTypeInfo, costToRaise
+from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, plantInfo, plantTypeInfo, costToRaise, seedAvailable\
+    ,plantInfo, gardenerOfPlant, costToRaise, plantStatus
 # Import nurseryStaff table
 from app.mod_owner.models import nurseryStaff
 
 from app.mod_manager.models import plantTypeInfo
 
-from app.mod_gardener.queries import get_complete_plant_description
+from app.mod_gardener.queries import get_complete_plant_description, get_seeds_to_sow
 
 # import checked_logged_in function
 from app.mod_auth.controllers import check_logged_in
@@ -33,8 +36,41 @@ def view_plant_types():
         plant_description_list = []
         for plant in plant_type_list:
             plant_description = get_complete_plant_description(plant.plantTypeID)
+            plant_description['seeds_list']  = get_seeds_to_sow(plant.plantTypeID)
             plant_description_list.append(plant_description)
         
         return render_template('gardener/view_plant_types.html', role=str(session['role']), plant_type_list=plant_description_list)
 
+    return redirect(url_for('landing.index'))
+
+@mod_gardener.route('/sow_seeds', methods=['POST'])
+def sow_seeds():
+    if check_logged_in(3) and 'checkbox' in request.form:
+        data = request.form.getlist('checkbox')
+
+        for batch in data:
+            seedBatchID = int(batch.split('_')[0])
+            plantTypeID = int(batch.split('_')[1])
+           
+            quantity = request.form["quantity"+str(seedBatchID)]
+            if quantity != '':
+                quantity = int(quantity)
+                # Check if quantity <= availability
+                seedBatch = seedAvailable.query.filter_by(seedBatchID=seedBatchID).first()
+                if quantity <= seedBatch.quantity:
+                    # Update seed available
+                    seedBatch.quantity -= quantity
+
+                    seedBatchInfoObject = seedBatchInfo.query.filter_by(seedBatchID=seedBatchID).first()
+                    for i in range(0, quantity):
+                        plant = plantInfo(plantTypeID, seedBatchID, seedTypeInfo.query.filter_by(seedTypeID=seedBatchInfoObject.seedTypeID).first().plantColor, plantStatus.GROWING)
+                        db.session.add(plant)
+                        db.session.commit()
+                        # Add value to cost to raise
+                        db.session.add(costToRaise(plant.pID, (seedBatchInfoObject.batchCost)/1000))
+            
+                        # Update gardener of plant
+                        gardener = gardenerOfPlant(plant.pID, session['user_id'])
+                        db.session.add(gardener)
+                        db.session.commit()
     return redirect(url_for('landing.index'))

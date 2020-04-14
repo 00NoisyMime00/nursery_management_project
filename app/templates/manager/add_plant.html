@@ -11,57 +11,64 @@
     {% if role == '2' %}
     
     {% if assigned == 'True' %}
-        <form method="POST" enctype=multipart/form-data action="{{ url_for('manager.add_plant') }}">
-            <label for="name">Plant Name:</label><br>
-            <input type="text" id="pname" name="pname" required><br>
+        <div style = "padding: 2%;"class="jumbotron h1 text-center">
+            Nusery Mangement Simplified
+            <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">Add Plant</p>
+        </div>
+        <div class="container">
+            <form method="POST" enctype=multipart/form-data action="{{ url_for('manager.add_plant') }}">
+                <dl>
+                    <label for="name">Plant Name:</label><br>
+                    <input type="text" id="pname" name="pname" required><br>
 
-            <label for="name">Fertilizer:</label><br>
-            <input type="text" id="fertilizer" name="fertilizer" required><br>
+                    <label for="name">Fertilizer:</label><br>
+                    <input type="text" id="fertilizer" name="fertilizer" required><br>
 
-            <label for="name">Weather Conditions:</label><br>
-            <input type="radio" id="summer" name="weather" value="summer" required>
-            <label for="summer">Summer</label><br>
-            <input type="radio" id="winter" name="weather" value="winter"required>
-            <label for="summer">Winter</label><br>
-            <input type="radio" value="all_season" name="weather" required>
-            <label for="summer">All Season</label><br><br>
+                    <label for="name">Weather Conditions:</label><br>
+                    <input type="radio" id="summer" name="weather" value="summer" required>
+                    <label for="summer">Summer</label><br>
+                    <input type="radio" id="winter" name="weather" value="winter"required>
+                    <label for="summer">Winter</label><br>
+                    <input type="radio" value="all_season" name="weather" required>
+                    <label for="summer">All Season</label><br><br>
 
-            <label for="name">Sunlight Conditions:</label><br>
-            <input type="radio" value="mild" name="sunlight" required>
-            <label for="mild">Mild</label><br>
-            <input type="radio" value="moderate" name="sunlight" required>
-            <label for="moderate">Moderate</label><br>
-            <input type="radio" value="extreme" name="sunlight" required>
-            <label for="summer">Extreme</label><br><br>
+                    <label for="name">Sunlight Conditions:</label><br>
+                    <input type="radio" value="mild" name="sunlight" required>
+                    <label for="mild">Mild</label><br>
+                    <input type="radio" value="moderate" name="sunlight" required>
+                    <label for="moderate">Moderate</label><br>
+                    <input type="radio" value="extreme" name="sunlight" required>
+                    <label for="summer">Extreme</label><br><br>
 
-            <label for="name">Pot Size:</label><br>
-            <input type="radio" value="small" name="potsize" required>
-            <label for="mild">small</label><br>
-            <input type="radio" value="medium" name="potsize" required>
-            <label for="moderate">Medium</label><br>
-            <input type="radio" value="large" name="potsize" required>
-            <label for="summer">Large</label><br><br>
+                    <label for="name">Pot Size:</label><br>
+                    <input type="radio" value="small" name="potsize" required>
+                    <label for="mild">small</label><br>
+                    <input type="radio" value="medium" name="potsize" required>
+                    <label for="moderate">Medium</label><br>
+                    <input type="radio" value="large" name="potsize" required>
+                    <label for="summer">Large</label><br><br>
 
-            <label for="water">Water Input(ml):</label><br>
-            <input type="number" name='water'><br><br>
+                    <label for="water">Water Input(ml):</label><br>
+                    <input type="number" name='water'><br><br>
 
-            <!-- Not always required -->
-            <label for="name">Special Requirements:</label><br>
-            <textarea name="special" id="special" cols="40" rows="4"></textarea><br><br>
+                    <!-- Not always required -->
+                    <label for="name">Special Requirements:</label><br>
+                    <textarea name="special" id="special" cols="40" rows="4"></textarea><br><br>
 
-            <p><strong>Select Plant Uses. You may control-click (Windows) or command-click (Mac) to select more than one.</strong></p>
-            <select name="uses" multiple size="4" required>
-                <option value="cosmetic">Cosmetic</option>
-                <option value="medicinal">Medicinal</option>
-                <option value="decorative">Decorative</option>
-                <option value="edible">Edible</option>
-            </select><br><br>
+                    <p><strong>Select Plant Uses. You may control-click (Windows) or command-click (Mac) to select more than one.</strong></p>
+                    <select name="uses" multiple size="4" required>
+                        <option value="cosmetic">Cosmetic</option>
+                        <option value="medicinal">Medicinal</option>
+                        <option value="decorative">Decorative</option>
+                        <option value="edible">Edible</option>
+                    </select><br><br>
 
-            <label for="image">Choose Image:</label><br>
-            <input type=file id="img" name="img" required><br><br>
-
-            <button type="submit" name="submit" value=upload>Create</button><br>   
-        </form>
+                    <label for="image">Choose Image:</label><br>
+                    <input type=file id="img" name="img" required><br><br>
+                </dl>
+                <p><input type=submit value="Create" value=upload class="btn btn-info mt-2"></p>
+            </form>
+    </div>
     {% else %}
         <h1>No nursery assigned yet.</h1>
     {% endif %}
@@ -69,3 +76,18 @@
 
     {% endif %}
 {% endblock %}
+
+
+
+<div class="container">
+    <form method="POST" action="{{ url_for('owner.add_nursery') }}" enctype ="multipart/form-data">
+    <dl>
+        {{ render_field(form.pincode ,placeholder = "Pincode",class = "form-control") }}
+        {{ render_field(form.city,placeholder = "City",class = "form-control") }}
+        {{ render_field(form.country,placeholder = "Country",class = "form-control") }}
+        {{ render_field(form.labour,placeholder = "Labour Cost",class = "form-control") }}
+        {{ render_field(form.maintenance,placeholder = "Maintenance Cost",class = "form-control") }}
+    </dl>
+    <p><input type=submit value="Create" class="btn btn-info mt-2"></p>
+    </form>
+</div>
