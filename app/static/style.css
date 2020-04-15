@@ -5,3 +5,16 @@ i{
     font-size: 20px;
 }
 
+.assign-employee select{
+    padding: 10px;
+    font-size: 25px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+    scroll-padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.assign-employee select option{
+    padding: 10px;
+    margin-bottom:5px;
+} 

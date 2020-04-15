@@ -14,10 +14,18 @@
     {% if role == '1' %}
         {% if assigned == 'False' %}
             {% if employee_list != [('','',''),] %}
-                <form action="{{ url_for(request.endpoint, id=id) }}" method="post">
-                    {{ render_employees(employee_list, 'True') }}
-                    <button type="submit">Assign</button>
-                </form>
+                <div style = "padding: 2%;"class="jumbotron h1 text-center">
+                    Assign Employee
+                    <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">Select an Employee and click assign</p>
+                </div>
+                <div class="container assign-employee">
+                    <form action="{{ url_for(request.endpoint, id=id) }}" method="post">
+                        <select class = "form-control" size="10" name="assign_manager" id="assign_manager" multiple>
+                            {{ render_employees(employee_list, 'True') }}
+                        </select>
+                        <br>
+                        <button class= "btn btn-success" style="float:right ;" type="submit">Assign</button>
+                    </form>
             {% else %}
                 <h1>No Manager is free</h1>
             {% endif %}

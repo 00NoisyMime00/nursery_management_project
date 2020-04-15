@@ -45,6 +45,7 @@ from io import BytesIO
 
 # Base directory to store images
 from config import BASE_IMG_DIR
+from app.mod_manager.forms import AddPlantForm, AddGardenerForm
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -66,11 +67,12 @@ def add_gardener():
         nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
         if nID != None:
             nID = nID.nID
-    
+
+        form = AddGardenerForm(request.form)
         if request.method == 'POST' and nID != None:
-            username = request.form['name']
-            emailID = request.form['emailID']
-            password = request.form['password']
+            username = form.name.data
+            emailID = form.email.data
+            password = form.password.data
             role = 3
             error = None
 
@@ -88,9 +90,9 @@ def add_gardener():
                 db.session.add(employeeInfo(temp.id , int(session['user_id'])))
                 db.session.add(nurseryStaff(nID, temp.id))
                 db.session.commit()
-                return redirect(url_for('manager.index'))
+            return redirect(url_for('manager.index'))
         if nID != None:
-            return render_template('manager/add_gardener.html', role=str(session['role']), assigned='True')
+            return render_template('manager/add_gardener.html', form = form ,role=str(session['role']), assigned='True')
         return render_template('manager/not_assigned.html', role=str(session['role']))
     return redirect(url_for('landing.index'))
 
@@ -119,16 +121,17 @@ def add_plant():
     if check_logged_in(2):
         nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
         
+        form = AddPlantForm(request.form)
         if request.method == 'POST' and nID != None:
             nID = nID.nID
-            plantName = request.form['pname'].lower()
-            fertilizer = request.form['fertilizer'].lower()
-            weather = request.form['weather'].lower()
-            water = int(request.form['water'])
-            sunlight = request.form['sunlight'].lower()
-            potsize = request.form['potsize'].lower()
-            special = request.form['special'].lower()
-            uses = request.form.getlist('uses')
+            plantName = form.pname.data.lower()
+            fertilizer = form.fertilizer.data.lower()
+            weather = form.weather.data.lower()
+            water = int(form.water.data)
+            sunlight = form.sunlight.data.lower()
+            potsize = form.potsize.data.lower()
+            special = form.special.data.lower()
+            uses = form.uses.data
 
             cosmetic    = False
             medicinal   = False
@@ -188,11 +191,11 @@ def add_plant():
                 IMG_PATH = 'static/'+IMG_PATH.split('static/')[1]
                 db.session.add(plantImages(plantType.plantTypeID, IMG_PATH))
                 db.session.commit()
-                return redirect(url_for('landing.index'))
+            return redirect(url_for('landing.index'))
         
         if nID != None:
             nID = nID.nID
-            return render_template('manager/add_plant.html', role=str(session['role']), assigned='True')
+            return render_template('manager/add_plant.html', form=form ,role=str(session['role']), assigned='True')
         return render_template('manager/not_assigned.html', role=str(session['role']))
     return redirect(url_for('landing.index'))
 

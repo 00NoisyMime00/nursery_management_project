@@ -2,6 +2,8 @@
 {% set active_page = 'add_gardener' %}
 {% set role = role|default(none) %}
 {% set assigned = assigned|default('False') %}
+<!-- Importing macro to render form fields -->
+{% from "macros.html" import render_field %}
 
 {% block title %}
     Add Gardener
@@ -11,15 +13,19 @@
     {% if role == '2' %}
     
     {% if assigned == 'True' %}
+        <div style = "padding: 2%;"class="jumbotron h1 text-center">
+            Add Gardener to Nursery
+            <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">Enter Details</p>
+        </div>
+        <div class="container">
         <form method="POST" action="{{ url_for('manager.add_gardener') }}">
-            <label for="fname">name:</label><br>
-            <input type="text" id="name" name="name" required><br>
-            <label for="emailID">emailID:</label><br>
-            <input type="text" id="emailID" name="emailID" required><br>
-            <label for="password">password</label><br>
-            <input type="password" id="password" name="password" required><br>
-
-            <button type="submit" name="submit">Create</button>
+            <dl>
+                {{ render_field(form.name ,placeholder = "Name",class = "form-control") }}
+                {{ render_field(form.email,placeholder = "Email",class = "form-control") }}
+                {{ render_field(form.password,placeholder = "Enter a secure password",class = "form-control") }}
+                {{ render_field(form.confirm,placeholder = "Re-Enter Password",class = "form-control") }}
+            </dl>
+            <button type="submit" class="btn btn-success mt-3" name="submit">Create</button>
         </form>
     {% else %}
         <h1>No nursery assigned yet.</h1>

@@ -4,8 +4,8 @@
     {% if logged_in == 'False' %}
         {% set navbar_list = [
             ("landing.index", 'index', 'Home'),
-            ('auth.signin', 'signin', 'Signin'),
-            ("auth.signup", 'signup', 'Signup')
+            ('auth.signin', 'signin', 'Sign In'),
+            ("auth.signup", 'signup', 'Sign Up')
             ] %}
     {% else %}
         <!-- Sets the items on nav bar when signed in -->
@@ -125,8 +125,9 @@
                 </div>
             </div>
             {% else %}
-                <input type="radio" name="assign_manager" id="assign_manager" value={{emailID}} required>
-                {{ name }} - {{ emailID }}</br>
+                <option  value={{emailID}}>
+                    <h5>{{ name }} - {{ emailID }}</h5>
+                </option>
             {% endif %}
         {% endfor %}
     {% else %}
