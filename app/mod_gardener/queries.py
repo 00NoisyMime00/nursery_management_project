@@ -1,8 +1,11 @@
 from app import db
 
-from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeUses
+from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeUses, plantTypeDescription
 
-from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorSeedInfo, vendorInfo, gardenerOfPlant, plantInfo
+from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorSeedInfo\
+    , vendorInfo, gardenerOfPlant, plantInfo, costToRaise
+
+from app.mod_auth.models import User
 
 def get_complete_plant_description(pID):
     description = {}
@@ -64,3 +67,45 @@ def get_plants_assigned(eID):
         plants_description_list.append(plant_description)
     
     return plants_description_list
+
+def get_plant_profile(pID):
+    plant = plantInfo.query.filter_by(pID=pID).first()
+    description = {}
+    description['id']           = pID
+    description['seedBatchID'] = plant.seedBatchID
+    description['colour']       = plant.plantColour
+    description['dateSown']     = str(plant.dateSown.date())
+    description['status']       = plant.plantStatus.value
+    description['typeID']       = plant.plantTypeID
+    cost                        = costToRaise.query.filter_by(pID=pID).first()
+    description['cost']         = cost.cost
+    plantType                   = plantTypeInfo.query.filter_by(plantTypeID=description['typeID']).first()
+    description['name']         = plantType.plantTypeName
+    description['image']       = plantImages.query.filter_by(plantTypeID=description['typeID']).first().imageLink
+    plantUses                   = plantTypeUses.query.filter_by(plantTypeID=plantType.plantTypeID).first()
+    
+    description['uses']         = []
+    if plantUses.cosmetic       == True:
+        description['uses'].append('cosmetic')
+    if plantUses.medicinal      == True:
+        description['uses'].append('medicinal')
+    if plantUses.decorative     == True:
+        description['uses'].append('decorative')
+    if plantUses.edible         == True:
+        description['uses'].append('edible')
+
+    plantDescription            = plantTypeDescription.query.filter_by(plantTypeID=plantType.plantTypeID).first()
+    description['fertilizer']   = plantDescription.fertilizer
+    description['water']        = plantDescription.waterRequirements
+    description['weather']      = plantDescription.weatherCondition.value
+    description['sunlight']     = plantDescription.sunlightCondition.value
+    description['potSize']      = plantDescription.potSize.value
+    description['special']      = plantDescription.specialRequirements
+
+    gardenerID                  = gardenerOfPlant.query.filter_by(pID=pID).first().eID
+    gardener                    = User.query.filter_by(id=gardenerID).first()
+    description['gardener']     = gardener.name
+    description['gardenerID']   = gardenerID
+
+    return description
+    

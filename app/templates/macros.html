@@ -453,7 +453,7 @@
                                 </p> 
                             </div>
                             <div class="card-footer btn-group">
-                                <a href="#" class="btn btn-primary">Visit Profile</a>
+                                <a href="{{ url_for('gardener.view_plant_profile', pID=plant['id']) }}" class="btn btn-primary">Visit Profile</a>
                                 <div class="dropdown show">
                                     <a class="btn btn-secondary dropdown-toggle ml-2" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                       Change Status

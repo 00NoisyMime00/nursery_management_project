@@ -54,7 +54,7 @@ class sunlightTypes(enum.Enum):
 class potSizeTypes(enum.Enum):
 
     SMALL   = 'small'
-    MEDIUM  = 'meduim'
+    MEDIUM  = 'medium'
     LARGE   = 'large'
 
 class plantTypeDescription(db.Model):

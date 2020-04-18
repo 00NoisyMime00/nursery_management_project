@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% set active_page = 'view_plant_profile' %}
+{% set role = role|default(none) %}
+{% set description = description|default({}) %}
+
+{% from 'macros.html' import render_plant_types %}
+
+{% block title %}
+    View Plant Profile
+{% endblock %}
+
+{% block content %}
+    {% if role == '3' %}
+        <h1>
+            <img src ="{{ description['image'] }}" class="card-img" alt="..." style="height: 350px; width: 350px;">
+            Name: {{ description['name']|title() }}
+        </h1>
+        <h3>
+            ID: {{ description['id'] }} <br>
+            Seed batch id: {{ description['seedBatchID'] }} <br>
+            Plant Colour: {{ description['colour'] }} <br>
+            Date Sown: {{ description['dateSown'] }} <br>
+            Plant status: {{ description['status'] }} <br>
+            Cost till now: {{ description['cost'] }} <br>
+            Plant Type ID: {{ description['typeID'] }} <br>
+            Uses:
+                {% for use in description['uses'] %}
+                    {{ use }}&nbsp; &nbsp;
+                {% endfor %} <br>
+            Plant Description: <br>
+            &nbsp; Fertilizer: {{ description['fertilizer'] }} <br>
+            &nbsp; Water Req: {{ description['water'] }} ml/day <br>
+            &nbsp; Weather Conditions: {{ description['weather'] }} <br>
+            &nbsp; Sunlight req: {{ description['sunlight'] }} <br>
+            &nbsp; Potsize req: {{ description['potSize'] }} <br>
+            &nbsp; Special Req: {{ description['special'] }} <br>
+        </h3>
+    {% endif %}
+{% endblock %}

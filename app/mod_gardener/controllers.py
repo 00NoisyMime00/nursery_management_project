@@ -13,7 +13,7 @@ from app.mod_owner.models import nurseryStaff
 
 from app.mod_manager.models import plantTypeInfo
 
-from app.mod_gardener.queries import get_complete_plant_description, get_seeds_to_sow, get_plants_assigned
+from app.mod_gardener.queries import get_complete_plant_description, get_seeds_to_sow, get_plants_assigned, get_plant_profile
 
 # import checked_logged_in function
 from app.mod_auth.controllers import check_logged_in
@@ -102,4 +102,16 @@ def change_status():
                 plant.plantStatus = plantStatus.NEEDS_ATTENTION
             db.session.commit()
         return redirect(url_for('gardener.view_plants_assigned'))
+    return redirect(url_for('landing.index'))
+
+@mod_gardener.route('/view_plant_profile', methods=['GET'])
+def view_plant_profile():
+    if check_logged_in(3):
+        pID = request.args.get('pID', default='')
+        print(pID)
+        if pID != '':
+            pID = int(pID)
+            description = get_plant_profile(pID)
+            if description['gardenerID'] == session['user_id']:
+                return render_template('gardener/view_plant_profile.html', description=description, role=str(session['role']))
     return redirect(url_for('landing.index'))
