@@ -2,6 +2,8 @@
 {% extends 'base.html' %}
 {% set active_page = 'index' %}
 {% set role = role|default(none) %}
+{% set plants_list = plants_list|default(none) %}
+{% from 'macros.html' import render_plants_customer %}
 
 {% block title %}
     Index Page
@@ -10,7 +12,23 @@
 {% block content %}
     {% if role is not none %}
         {% if role == '0' %}
-            
+            <div style = "padding: 2%; margin: 1%; "class="jumbotron h1 text-center">
+                Welcome
+            </div>
+        
+            <!-- Filter button -->
+            <div class="row-fluid" style = "padding: 1%;">
+                <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#sortEmployee" style="float: right;">Filter</button>
+            </div>
+        
+            <div class ="row">
+                <div class="col-md-8" style="overflow-y: scroll; margin: auto">
+                <div class="container-fluid">
+                    {{ render_plants_customer(plants_list) }}
+                </div>
+                </div>
+            </div>
+    
         {% else %}
             <div class="jumbotron h1 text-center">
                 Welcome {{ user_name }}

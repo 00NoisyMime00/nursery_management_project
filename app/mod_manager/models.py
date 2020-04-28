@@ -105,3 +105,18 @@ class plantTypeUses(db.Model):
 
         return '<id-{id} cosmetic-{c} medicinal-{m} decorative-{d} edible-{e}>'\
             .format(id=self.plantTypeID, c=self.cosmetic, m=self.medicinal, d=self.decorative, e=self.edible)
+
+class plantTypesAvailable(db.Model):
+    __tablename__ = 'plantTypesAvailable'
+
+    plantTypeID = db.Column(db.Integer, db.ForeignKey(plantTypeInfo.plantTypeID), primary_key=True)
+    nID         = db.Column(db.Integer, db.ForeignKey(nurseryInfo.nID), primary_key=True)
+
+    def __init__(self, plantTypeID, nID):
+
+        self.plantTypeID = plantTypeID
+        self.nID         = nID
+
+    def __repr__(self):
+
+        return '<plant type-{pid} nursery-{nid}>'.format(pid=self.plantTypeID, nid=self.nID)

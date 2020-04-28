@@ -13,6 +13,8 @@ def index():
     print(session, str(datetime.datetime.now()))
     
     if('role' in session):
+        if session['role'] == 0:
+            return redirect(url_for('customer.index'))
         return render_template("landing/index.html", role = str(session['role']), user_name = session['user_name'])
     
     return render_template("landing/index.html", role = None)

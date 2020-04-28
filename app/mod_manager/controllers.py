@@ -18,7 +18,7 @@ from app.mod_auth.models import User
 # Import employeeInfo model for Manager and gardener
 from app.mod_owner.models import employeeInfo, nurseryStaff
 
-from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescription, plantTypeUses
+from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescription, plantTypeUses, plantTypesAvailable
 
 from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorInfo, vendorSeedInfo, plantInfo, plantStatus
 
@@ -289,14 +289,24 @@ def add_vendor():
 @mod_manager.route('/update_selling_price', methods=['GET', 'POST'])
 def update_selling_price():
     if check_logged_in(2) and 'id' in request.args:
-        plantTypeID = int(request.args.get('id'))
-        if request.method == 'POST':
-            plantType  = plantTypeInfo.query.filter_by(plantTypeID=plantTypeID).first()
-            sellingPrice = decimal.Decimal(request.form.get('sellingPrice'))
+       
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
+        if nID != None:
+            nID = nID.nID
+            
+            plantTypeID = int(request.args.get('id'))
+            if request.method == 'POST':
+                plantType  = plantTypeInfo.query.filter_by(plantTypeID=plantTypeID).first()
+                sellingPrice = decimal.Decimal(request.form.get('sellingPrice'))
 
-            plantType.sellingPrice = sellingPrice
-            db.session.commit()
-            return redirect(url_for('manager.view_plants'))
-        IMG_PATH = get_stats_for_selling_price(plantTypeID)
-        return render_template('manager/update_selling_price.html', plantTypeID=plantTypeID, role=str(session['role']), IMG_PATH=IMG_PATH)
+                plantType.sellingPrice = sellingPrice
+                # Make it available
+                is_available = plantTypesAvailable.query.filter_by(plantTypeID=plantType.plantTypeID).first()
+                if not is_available:
+                    db.session.add(plantTypesAvailable(plantType.plantTypeID, nID))
+                db.session.commit()
+                return redirect(url_for('manager.view_plants'))
+            IMG_PATH = get_stats_for_selling_price(plantTypeID)
+            return render_template('manager/update_selling_price.html', plantTypeID=plantTypeID, role=str(session['role']), IMG_PATH=IMG_PATH)
+    
     return redirect(url_for('landing.index'))

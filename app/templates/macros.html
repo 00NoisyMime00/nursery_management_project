@@ -189,7 +189,6 @@
 <!-- Form Field Macro ends --> 
 
 <!-- Macro for rendering Plants -->
-
 {% macro render_plants(plant_type_list) %}
     {% for plant in plant_type_list %}
         {% if loop.length != 0 %}
@@ -511,3 +510,48 @@
     {% endfor %}
 {% endmacro %}
 <!-- macro for plants assigned ends -->
+
+<!-- Macro for rendering Plants for customer -->
+{% macro render_plants_customer(plant_type_list) %}
+    {% for plant in plant_type_list %}
+        {% if loop.length != 0 %}
+            <div class ="card-deck">
+                <div class = "card text-white bg bg-dark mb-3">
+                    <div class="row no-gutters">
+                        <div class ="col-md-4">
+                            <img src ="{{ plant['image'] }}" class="card-img" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-header">
+                                <h3>{{plant['name']|title()}}</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                Selling Price: {{ plant['sellingPrice'] }} <br>
+                                Nursery: {{ plant['nID'] }} <br>
+                                Colour: {{ plant['colour'] }} <br>
+                                Uses: 
+                                {% for use in plant['uses'] %}
+                                {{use}}&nbsp;&nbsp;
+                                {% endfor %} <br>
+                                {% if plant['quantity'] > 0 %}
+                                    In Stock
+                                {% else %}
+                                    Out of Stock
+                                {% endif %}
+                                </p> 
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ url_for('customer.view_plant_profile', plantTypeID=plant['id']) }}" class="btn btn-primary">Visit Profile</a>
+                                <a href="#" class="btn btn-danger">Add To Cart</a>  
+                                <a href="#" class="btn btn-success">Purchase</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+<!-- Macro for rendering plants ends -->
