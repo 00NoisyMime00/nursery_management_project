@@ -5,9 +5,17 @@ from flask import Blueprint, request, render_template, \
 
 from markupsafe import escape
 
+from app import db
+
 from app.mod_auth.controllers import check_logged_in
 
 from app.mod_customer.queries import get_plants_available, get_complete_plant_info
+
+from app.mod_customer.models import plantsSold, transactionInfo
+
+from app.mod_gardener.models import plantInfo, plantStatus, plantsAvailable
+
+from app.mod_gardener.models import plantTypeInfo
 
 import datetime
 # Define the blueprint: 'customer', set its url prefix: app.url/auth
@@ -25,8 +33,29 @@ def index():
 def view_plant_profile():
     if check_logged_in(0):
         if request.method == 'POST':
-            if 'purchase' in request.form:
-                pass
+            if 'purchase' in request.form and 'id' in request.form:
+                plantTypeID                 = int(request.form.get('id'))
+                description                 = get_complete_plant_info(plantTypeID)
+
+                if description['quantity'] == 0:
+                    return redirect(url_for('customer.view_plant_profile'))
+
+                plant                       = plantInfo.query.filter_by(plantTypeID=plantTypeID, plantStatus=plantStatus.GROWN).first()
+
+                plantAvailableColumn         = plantsAvailable.query.filter_by(pID=plant.pID).first()
+                nID                          = description['nID']
+                sellingPrice                 = description['sellingPrice']
+                transaction                  = transactionInfo(session['user_id'])
+                
+                db.session.add(transaction)
+                db.session.commit()
+                
+                db.session.add(plantsSold(transaction.transactionID, plant.pID, nID, sellingPrice))
+                plant.plantStatus = plantStatus.SOLD
+                db.session.delete(plantAvailableColumn)
+                db.session.commit()
+                
+
         if 'plantTypeID' in request.args:
             plantTypeID = request.args.get('plantTypeID')
             description = get_complete_plant_info(plantTypeID)
