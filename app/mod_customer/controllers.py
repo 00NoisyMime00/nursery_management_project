@@ -21,13 +21,17 @@ def index():
         
         return render_template('landing/index.html', role=str(session['role']), plants_list=plants_list) 
 
-@mod_customer.route('/view_plant_profile', methods=['GET'])
+@mod_customer.route('/view_plant_profile_customer', methods=['GET', 'POST'])
 def view_plant_profile():
-    if check_logged_in(0) and 'plantTypeID' in request.args:
-        plantTypeID = request.args.get('plantTypeID')
-        description = get_complete_plant_info(plantTypeID)
-        return render_template('customer/view_plant_profile.html', role=str(session['role']), description=description)
-    return redirect('landing.index') 
+    if check_logged_in(0):
+        if request.method == 'POST':
+            if 'purchase' in request.form:
+                pass
+        if 'plantTypeID' in request.args:
+            plantTypeID = request.args.get('plantTypeID')
+            description = get_complete_plant_info(plantTypeID)
+            return render_template('customer/view_plant_profile.html', role=str(session['role']), description=description)
+    return redirect(url_for('landing.index')) 
     
 @mod_customer.route('/view_orders', methods=['GET'])
 def view_orders():

@@ -41,7 +41,7 @@ def get_complete_plant_info(pID):
     description['nID']          = plant.nID
     description['name']         = plant.plantTypeName
     description['sellingPrice'] = plant.sellingPrice
-    
+    description['quantity']     = len(plantInfo.query.filter_by(plantTypeID=pID, plantStatus=plantStatus.GROWN).all())
     description['colour']       = []
     seedType                    = seedTypeInfo.query.filter_by(plantTypeID=pID).all()
     for seed in seedType:

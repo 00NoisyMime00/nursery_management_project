@@ -97,8 +97,11 @@ def change_status():
             if status == 'growing':
                 plant.plantStatus = plantStatus.GROWING
             elif status == 'grown':
-                db.session.add(plantsAvailable(plant.pID, nID))
-                db.session.commit()
+                try:
+                    db.session.add(plantsAvailable(plant.pID, nID))
+                    db.session.commit()
+                except:
+                    pass
                 plant.plantStatus = plantStatus.GROWN
             elif status == 'sold':
                 plant.plantStatus = plantStatus.SOLD
