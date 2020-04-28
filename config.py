@@ -9,6 +9,7 @@ DEBUG = True
 import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))  
 BASE_IMG_DIR = os.path.join(BASE_DIR, 'app/static/images')
+BASE_STATS_DIR = os.path.join(BASE_DIR, 'app/static/stats')
 
 # Define the database
 # CHANGE THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSsss

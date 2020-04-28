@@ -152,3 +152,37 @@ class gardenerOfPlant(db.Model):
     def __repr__(self):
 
         return '<pid-{pid} eid-{eid}>'.format(pid=self.pID, eid=self.eID)
+
+class plantSold(db.Model):
+    __tablename__ = 'plantSold'
+
+    transactionID   = db.Column(db.Integer, primary_key=True)
+    pID             = db.Column(db.Integer, db.ForeignKey(plantInfo.pID))
+    nID             = db.Column(db.Integer, db.ForeignKey(nurseryInfo.nID))
+    dateOfSelling   = db.Column(db.DateTime, default=db.func.current_timestamp())
+    sellingPrice    = db.Column(db.Numeric(10, 2), nullable=False)
+
+    def __init__(self, pID, nID, sellingPrice):
+
+        self.pID            = pID
+        self.nID            = nID
+        self.sellingPrice   = sellingPrice
+    
+    def __repr__(self):
+
+        return '<transaction ID={tid} date-{d} price-{p}> plant-{pid}'.format(tid=self.transactionID, d=self.dateOfSelling, pid=self.pID)
+
+class plantsAvailable(db.Model):
+    __tablename__ = 'plantsAvailable'
+
+    pID = db.Column(db.Integer, db.ForeignKey(plantInfo.pID), primary_key=True)
+    nID = db.Column(db.Integer, db.ForeignKey(nurseryInfo.nID), primary_key=True)
+
+    def __init__(self, pID, nID):
+
+        self.pID = pID
+        self.nID = nID
+
+    def __repr__(self):
+
+        return '<pID-{pid} nid-{nid}>'.format(pid=self.pID, nid=self.nID)

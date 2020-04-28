@@ -12,6 +12,7 @@ class plantTypeInfo(db.Model):
     plantTypeID     = db.Column(db.Integer, primary_key=True, autoincrement = True)
     plantTypeName   = db.Column(db.String(100))
     nID             = db.Column(db.Integer, db.ForeignKey(nurseryInfo.nID))
+    sellingPrice    = db.Column(db.Numeric(10, 2), default=0)
     imageURLS       = db.relationship("plantImages", backref="plantTypeInfo", cascade="all, delete-orphan", lazy='dynamic')
 
     def __init__(self, plantTypeName, nID):

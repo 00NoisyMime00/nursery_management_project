@@ -3,3 +3,4 @@ __pycache__/
 app.db
 secret.py
 images/
+stats/

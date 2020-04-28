@@ -20,9 +20,9 @@ from app.mod_owner.models import employeeInfo, nurseryStaff
 
 from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescription, plantTypeUses
 
-from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorInfo, vendorSeedInfo
+from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorInfo, vendorSeedInfo, plantInfo, plantStatus
 
-from app.mod_manager.queries import get_gardeners, get_vendors
+from app.mod_manager.queries import get_gardeners, get_vendors, get_stats_for_selling_price
 
 from app.mod_gardener.queries import get_complete_plant_description
 
@@ -33,6 +33,8 @@ from app.mod_auth.forms import LoginForm
 from app.mod_auth.models import User
 # For image upload making directory
 from pathlib import Path
+
+import decimal
 
 # For uploading image
 from werkzeug.utils import secure_filename
@@ -282,4 +284,19 @@ def add_vendor():
                 plant_description_list.append(plant_description)
             return render_template('manager/add_vendor.html', role=str(session['role']), plant_type_list=plant_description_list)
         return render_template('manager/not_assigned.html', role=str(session['role']))
+    return redirect(url_for('landing.index'))
+
+@mod_manager.route('/update_selling_price', methods=['GET', 'POST'])
+def update_selling_price():
+    if check_logged_in(2) and 'id' in request.args:
+        plantTypeID = int(request.args.get('id'))
+        if request.method == 'POST':
+            plantType  = plantTypeInfo.query.filter_by(plantTypeID=plantTypeID).first()
+            sellingPrice = decimal.Decimal(request.form.get('sellingPrice'))
+
+            plantType.sellingPrice = sellingPrice
+            db.session.commit()
+            return redirect(url_for('manager.view_plants'))
+        IMG_PATH = get_stats_for_selling_price(plantTypeID)
+        return render_template('manager/update_selling_price.html', plantTypeID=plantTypeID, role=str(session['role']), IMG_PATH=IMG_PATH)
     return redirect(url_for('landing.index'))

@@ -3,7 +3,7 @@ from app import db
 from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeUses, plantTypeDescription
 
 from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorSeedInfo\
-    , vendorInfo, gardenerOfPlant, plantInfo, costToRaise
+    , vendorInfo, gardenerOfPlant, plantInfo, costToRaise, plantStatus
 
 from app.mod_auth.models import User
 
@@ -11,9 +11,10 @@ def get_complete_plant_description(pID):
     description = {}
     
     plant = plantTypeInfo.query.filter_by(plantTypeID=pID).first()
-    description['id']       = pID
-    description['name']     = plant.plantTypeName
-    description['image']    = plantImages.query.filter_by(plantTypeID=plant.plantTypeID).first().imageLink
+    description['id']           = pID
+    description['name']         = plant.plantTypeName
+    description['sellingPrice'] = plant.sellingPrice
+    description['image']        = plantImages.query.filter_by(plantTypeID=plant.plantTypeID).first().imageLink
     
     plantUses = plantTypeUses.query.filter_by(plantTypeID=plant.plantTypeID).first()
     description['uses']     = []
@@ -59,6 +60,8 @@ def get_plants_assigned(eID):
     for plant in plants_id_list:
         plant_description = {}
         plantObject = plantInfo.query.filter_by(pID=plant.pID).first()
+        if plantObject.plantStatus == plantStatus.SOLD or plantObject.plantStatus == plantStatus.DEAD:
+            continue
         plant_description['date_sown']  = plantObject.dateSown.date()
         plant_description['status']     = plantObject.plantStatus.value
         plant_description['name']       = plantTypeInfo.query.filter_by(plantTypeID=plantObject.plantTypeID).first().plantTypeName

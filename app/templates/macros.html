@@ -206,6 +206,7 @@
                             <div class="card-body">
                                 <p class="card-text">
                                 Seeds Available: {{ plant['seedsAvailable'] }}<br>
+                                Selling Price: {{ plant['sellingPrice'] }} <br>
                                 Uses: 
                                 {% for use in plant['uses'] %}
                                 {{use}}&nbsp;&nbsp;
@@ -215,14 +216,15 @@
                             <div class="card-footer">
                                 <a href="#" class="btn btn-primary">Visit Profile</a>
                                 <a href="." class="btn btn-danger" data-toggle="modal" data-target="#{{plant['name']}}">Buy Seeds</a>  
+                                <a href="{{ url_for('manager.update_selling_price', id=plant['id']) }}" class="btn btn-success">Update Price</a>
                             </div>
                         </div>
 
                     </div>
                 </div>
             </div>
+            <!-- Modal for buy seeds-->
             <form action="{{ url_for('manager.buy_seeds') }}" method="post">
-                <!-- Modal for buy seeds-->
             <div class="modal fade right" id="{{plant['name']}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -236,7 +238,6 @@
                     <ul>
                     {{ render_vendors(plant['vendors_list'], plant['id']) }}
                     </ul>
-                    <!-- Fixme -->
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -245,7 +246,8 @@
                 </div>
                 </div> 
                 </div>
-                </form>
+            </form>
+            <!-- Modal for buy seeds ends -->
 
         {% endif %}
     {% endfor %}
@@ -466,13 +468,44 @@
                                       <a class="dropdown-item" href="{{ url_for('gardener.change_status', id=plant['id'], status='dead') }}">Dead</a>
                                       <a class="dropdown-item" href="{{ url_for('gardener.change_status', id=plant['id'], status='needs_attention') }}">Needs Attention</a>
                                     </div>
-                                  </div>  
+                                  </div>
+                                <button id="modalActivate" type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#updateCostToRaise{{ plant['id'] }}" style="float: right;">Update Cost to Raise</button>
                             </div>
                         </div>
 
                     </div>
                 </div>
             </div>
+
+              <!-- Modal -->
+            <form action="{{ url_for('gardener.update_cost_to_raise')  }}" method="post">
+                <div class="modal fade right" id="updateCostToRaise{{ plant['id'] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-dark" id="exampleModalPreviewLabel">Update Cost to Raise</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body btn-block">
+                                <label>Reason</label>
+                                <input type="number" value="{{ plant['id'] }}" style="visibility: hidden;" name="id"> <br>
+                                <input type="text" placeholder="Reason" name="reason">
+                                <input type="number" placeholder="Cost" name="cost" step=".01">
+                                <br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <a href="#" class="btn">
+                                <button type="submit" class="btn btn-success">Update</button>
+                            </a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </form>
+            <!-- Modal ends -->
 
         {% endif %}
     {% endfor %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% set active_page = 'update_selling_price' %}
+{% set plantTypeID = plantTypeID|default(none) %}
+{% set role = role|default(none) %}
+{% set IMG_PATH = IMG_PATH|default(none) %}
+
+{% block title %}
+    Update Selling Price
+{% endblock %}
+
+{% block content %}
+    {% if role == '2' %}
+        {% if IMG_PATH != none %}
+            <img src="{{ IMG_PATH }}" width="350" height="350" alt="No Plant Grown Yet..">
+        {% endif %}
+        <form action="{{ url_for('manager.update_selling_price', id=plantTypeID) }}" method="post">
+            <label for="">Updated Selling Price:</label>
+            <input type="number" step="0.01" placeholder="Updated Selling Price" name="sellingPrice"> <br>
+            <button type="submit">Update</button>
+        </form>
+    {% endif %}
+{% endblock %}

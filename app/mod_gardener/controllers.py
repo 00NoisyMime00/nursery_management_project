@@ -7,7 +7,7 @@ from app import db
 from markupsafe import escape 
 # Import these tables
 from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, plantInfo, plantTypeInfo, costToRaise, seedAvailable\
-    ,plantInfo, gardenerOfPlant, costToRaise, plantStatus
+    ,plantInfo, gardenerOfPlant, costToRaise, plantStatus, plantsAvailable
 # Import nurseryStaff table
 from app.mod_owner.models import nurseryStaff
 
@@ -17,6 +17,8 @@ from app.mod_gardener.queries import get_complete_plant_description, get_seeds_t
 
 # import checked_logged_in function
 from app.mod_auth.controllers import check_logged_in
+
+import decimal
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_gardener = Blueprint('gardener', __name__, url_prefix='/')
@@ -85,14 +87,18 @@ def view_plants_assigned():
 @mod_gardener.route('/change_status')
 def change_status():
     if check_logged_in(3):
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first().nID
         pID = request.args.get('id', default='')
         status = request.args.get('status', default='')
 
-        if pID != '' and status in ['growing', 'grown', 'sold', 'dead', 'needs_attention']:
+        possible_status = ['growing', 'grown', 'sold', 'dead', 'needs_attention']
+        if pID != '' and status in possible_status:
             plant = plantInfo.query.filter_by(pID=int(pID)).first()
             if status == 'growing':
                 plant.plantStatus = plantStatus.GROWING
             elif status == 'grown':
+                db.session.add(plantsAvailable(plant.pID, nID))
+                db.session.commit()
                 plant.plantStatus = plantStatus.GROWN
             elif status == 'sold':
                 plant.plantStatus = plantStatus.SOLD
@@ -114,4 +120,17 @@ def view_plant_profile():
             description = get_plant_profile(pID)
             if description['gardenerID'] == session['user_id']:
                 return render_template('gardener/view_plant_profile.html', description=description, role=str(session['role']))
+    return redirect(url_for('landing.index'))
+
+@mod_gardener.route('/update_cost_to_raise', methods=['POST'])
+def update_cost_to_raise():
+    if check_logged_in(3) and 'reason' in request.form and 'cost' in request.form:
+        pID     = int(request.form.get('id'))
+        reason  = request.form.get('reason')
+        cost    = decimal.Decimal(request.form.get('cost'))
+
+        plant       = costToRaise.query.filter_by(pID=pID).first()
+        plant.cost  += cost
+        db.session.commit()
+        return redirect(url_for('gardener.view_plants_assigned'))
     return redirect(url_for('landing.index'))

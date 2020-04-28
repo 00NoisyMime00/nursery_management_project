@@ -9,9 +9,13 @@
 
 {% block content %}
     {% if role is not none %}
-        <div class="jumbotron h1 text-center">
-            Welcome {{ user_name }}
-        </div>
+        {% if role == '0' %}
+            
+        {% else %}
+            <div class="jumbotron h1 text-center">
+                Welcome {{ user_name }}
+            </div>
+        {% endif %}
     {% else %}
 
         <div class="jumbotron h1 text-center">
