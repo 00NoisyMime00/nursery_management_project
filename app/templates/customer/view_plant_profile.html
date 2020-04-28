@@ -9,36 +9,87 @@
 
 {% block content %}
     {% if role == '0' %}
-        <form action="{{ url_for('customer.view_plant_profile') }}" method="post">
-            <h1>
-                <img src ="{{ description['image'] }}" class="card-img" alt="..." style="height: 350px; width: 350px;">
-                Name: {{ description['name']|title() }}
+    <div class="container">
+        <div style="background-color:rgb(197, 204, 203);" class="text-center mt-5 rounded">
+            <img src ="{{ description['image'] }}" class="rounded my-4" alt="..." style="height: 350px; width: 350px;">
+            <h1 class="font-weight-bold pb-4">    
+                    {{ description['name']|title() }}
             </h1>
-            <h3>
-                Sold By Nursery: {{ description['nID'] }} <br>
-                Remaining: {{ description['quantity'] }} <br>
-                Uses:
-                    {% for use in description['uses'] %}
-                        {{ use }}&nbsp; &nbsp;
-                    {% endfor %} <br> <br>
-                
-                Plant Description: <br>
-                &nbsp; Fertilizer: {{ description['fertilizer'] }} <br>
-                &nbsp; Water Req: {{ description['water'] }} ml/day <br>
-                &nbsp; Weather Conditions: {{ description['weather'] }} <br>
-                &nbsp; Sunlight req: {{ description['sunlight'] }} <br>
-                &nbsp; Potsize req: {{ description['potSize'] }} <br>
-                &nbsp; Special Req: {{ description['special'] }} <br> <br>
-
-                Choose Colours: <br>
+        </div>
+        <div class="my-5">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                    <th scope="col">Plant Information</th>
+                    <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Sold By Nursery:</th>
+                    <td>{{ description['nID'] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Remaining: </th>
+                    <td>{{ description['quantity'] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Uses:</th>
+                    <td>
+                        {% for use in description['uses'] %}
+                            {{ use|title() }}&nbsp; &nbsp;
+                        {% endfor %}
+                    </td>
+                </tr>
+                </tbody>
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Plant Requirements</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Fertilizer :</th>
+                        <td>{{ description['fertilizer']|title() }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row"> Water (in ml/day) :</th>
+                        <td>{{ description['water'] }} </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Weather Conditions :</th>
+                        <td>{{ description['weather']|title() }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Sunlight :</th>
+                        <td>{{ description['sunlight']|title() }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Potsize :</th>
+                        <td>{{ description['potSize']|title() }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Special Requirements :</th>
+                        <td>{{ description['special']|title() }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="container text-center">
+            <form action="{{ url_for('customer.view_plant_profile') }}" method="post">
+                <h3 class="my-4 ">Choose Colours:</h3>
                     {% for colour in description['colour'] %}
-                        <input type="radio" name="colour" value="{{ colour }}" required>
-                        <label >{{ colour }}</label>
+                        <input class="form-check-input" type="radio" name="colour" value="{{ colour }}" required>
+                        <label class="form-check-label">{{ colour|title() }}</label>
                     {% endfor %} <br>
-            </h3>
-            <input type="number" name="id" value="{{ description['id'] }}" style="visibility: hidden;">
-            <input type="submit" class="btn btn-danger" name="add_to_cart" value="Add To Cart">  
-            <input type="submit" class="btn btn-success" name="purchase" value="Purchase">
-        </form>
+                    <input type="number" name="id" value="{{ description['id'] }}" style="visibility: hidden;">
+                    <div class="mb-5">
+                        <input type="submit" class="btn btn-danger btn-lg px-5" name="add_to_cart" value="Add To Cart">  
+                        <input type="submit" class="btn btn-success btn-lg px-5" name="purchase" value="Purchase">
+                    </div>
+                </form>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
