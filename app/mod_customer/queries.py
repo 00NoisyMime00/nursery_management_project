@@ -15,7 +15,6 @@ def get_plants_available():
         description['id']           = plant.plantTypeID
         description['nID']          = plant.nID
         description['name']         = plant.plantTypeName
-        description['colour']       = seedTypeInfo.query.filter_by(plantTypeID=plant_id.plantTypeID).first().plantColor
         description['sellingPrice'] = plant.sellingPrice
         description['quantity']     = len(plantInfo.query.filter_by(plantTypeID=plant_id.plantTypeID, plantStatus=plantStatus.GROWN).all())
         description['image']        = plantImages.query.filter_by(plantTypeID=plant.plantTypeID).first().imageLink
@@ -42,7 +41,13 @@ def get_complete_plant_info(pID):
     description['nID']          = plant.nID
     description['name']         = plant.plantTypeName
     description['sellingPrice'] = plant.sellingPrice
-    description['colour']       = seedTypeInfo.query.filter_by(plantTypeID=pID).first().plantColor
+    
+    description['colour']       = []
+    seedType                    = seedTypeInfo.query.filter_by(plantTypeID=pID).all()
+    for seed in seedType:
+        if seed.plantColor.lower() not in description['colour']:
+            description['colour'].append(seed.plantColor.lower())
+    
     description['image']        = plantImages.query.filter_by(plantTypeID=plant.plantTypeID).first().imageLink
     
     plantUses = plantTypeUses.query.filter_by(plantTypeID=plant.plantTypeID).first()

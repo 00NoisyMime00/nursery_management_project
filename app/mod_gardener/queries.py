@@ -42,10 +42,14 @@ def get_seeds_to_sow(plantTypeID):
 
     for seed in seed_types:
         seed_description = {}
+        seedBatch                       = seedBatchInfo.query.filter_by(seedTypeID=seed.seedTypeID).first()
+        if seedBatch == None:
+            continue
         vendor = vendorSeedInfo.query.filter_by(seedTypeID=seed.seedTypeID).first()
         seed_description['vendor_name'] = vendorInfo.query.filter_by(vendorID=vendor.vendorID).first().vendorName
         seed_description['cost']        = vendor.seedCost
-        seedBatch                       = seedBatchInfo.query.filter_by(seedTypeID=seed.seedTypeID).first()
+        
+        print(seed,seedBatch,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,")
         seed_description['id']          = seedBatch.seedBatchID
         seed_description['date']        = seedBatch.dateOfPurchase.date()
         seed_description['batch_size']  = seedAvailable.query.filter_by(seedBatchID=seedBatch.seedBatchID).first().quantity

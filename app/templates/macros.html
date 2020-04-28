@@ -454,7 +454,7 @@
                                 </p> 
                             </div>
                             <div class="card-footer btn-group">
-                                <a href="{{ url_for('gardener.view_plant_profile', pID=plant['id']) }}" class="btn btn-primary">Visit Profile</a>
+                                <a href="{{ url_for('gardener.view_plant_profile', pID=plant['id']) }}" class="btn btn-primary">Visit Profilee</a>
                                 <div class="dropdown show">
                                     <a class="btn btn-secondary dropdown-toggle ml-2" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                       Change Status
@@ -529,7 +529,6 @@
                                 <p class="card-text">
                                 Selling Price: {{ plant['sellingPrice'] }} <br>
                                 Nursery: {{ plant['nID'] }} <br>
-                                Colour: {{ plant['colour'] }} <br>
                                 Uses: 
                                 {% for use in plant['uses'] %}
                                 {{use}}&nbsp;&nbsp;
@@ -543,8 +542,6 @@
                             </div>
                             <div class="card-footer">
                                 <a href="{{ url_for('customer.view_plant_profile', plantTypeID=plant['id']) }}" class="btn btn-primary">Visit Profile</a>
-                                <a href="#" class="btn btn-danger">Add To Cart</a>  
-                                <a href="#" class="btn btn-success">Purchase</a>
                             </div>
                         </div>
 

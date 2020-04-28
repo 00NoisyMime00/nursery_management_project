@@ -9,14 +9,19 @@
 {% endblock %}
 
 {% block content %}
-    <form action="" method="post">
-        <label for="name">Vendor Name:</label>
-        <input type="text" name="name" required><br><br>
-
-        <label >Seeds Available:</label>
-        <ul class="list-group list-group-flush">
-            {{ render_plants_for_vendor(plant_type_list) }}    
-        </ul>
-        <button type="submit">Add Vendor</button>
-    </form>
+    <div style = "padding: 2%;"class="jumbotron h1 text-center">
+        Add Vendor
+        <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">Enter Details</p>
+    </div>
+    <div class="container">
+        <form action="" method="post">
+            <label for="name">Vendor Name:</label>
+            <input type="text" class = "form-control" name="name" required><br><br>
+            <label>Seeds Available:</label>
+            <ul class="list-group list-group-flush">
+                {{ render_plants_for_vendor(plant_type_list) }}    
+            </ul>
+            <button class = "btn btn-info mt-3 px-5 py-2 float-right"type="submit">Add Vendor</button> <br><br>
+        </form>
+    </div>
 {% endblock %}

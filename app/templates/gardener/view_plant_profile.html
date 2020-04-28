@@ -11,29 +11,97 @@
 
 {% block content %}
     {% if role == '3' %}
-        <h1>
-            <img src ="{{ description['image'] }}" class="card-img" alt="..." style="height: 350px; width: 350px;">
-            Name: {{ description['name']|title() }}
-        </h1>
-        <h3>
-            ID: {{ description['id'] }} <br>
-            Seed batch id: {{ description['seedBatchID'] }} <br>
-            Plant Colour: {{ description['colour'] }} <br>
-            Date Sown: {{ description['dateSown'] }} <br>
-            Plant status: {{ description['status'] }} <br>
-            Cost till now: {{ description['cost'] }} <br>
-            Plant Type ID: {{ description['typeID'] }} <br>
-            Uses:
-                {% for use in description['uses'] %}
-                    {{ use }}&nbsp; &nbsp;
-                {% endfor %} <br>
-            Plant Description: <br>
-            &nbsp; Fertilizer: {{ description['fertilizer'] }} <br>
-            &nbsp; Water Req: {{ description['water'] }} ml/day <br>
-            &nbsp; Weather Conditions: {{ description['weather'] }} <br>
-            &nbsp; Sunlight req: {{ description['sunlight'] }} <br>
-            &nbsp; Potsize req: {{ description['potSize'] }} <br>
-            &nbsp; Special Req: {{ description['special'] }} <br>
-        </h3>
+        <div class="container ">
+            <div style="background-color:rgb(197, 204, 203);" class="text-center mt-5 rounded">
+                <img src ="{{ description['image'] }}" class="rounded my-4" alt="..." style="height: 350px; width: 350px;">
+                <h1 class="font-weight-bold pb-4">    
+                        {{ description['name']|title() }}
+                </h1>
+            </div>
+            <div class="my-5">
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Plant Information</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ description['id'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Seed batch id</th>
+                        <td>{{ description['seedBatchID'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Plant Colour</th>
+                        <td>{{ description['colour']|title() }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Date Sown</th>
+                        <td>{{ description['dateSown'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Plant status</th>
+                        <td>{{ description['status'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Cost till now:</th>
+                        <td>{{ description['cost'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Plant Type ID</th>
+                        <td>{{ description['typeID'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Uses</th>
+                        <td>
+                            {% for use in description['uses'] %}
+                                {{ use|title() }}&nbsp; &nbsp;
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    </tbody>
+                <!-- </table>
+            </div>
+            <div class="my-5">
+                <table class="table"> -->
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Plant Requirements</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Fertilizer :</th>
+                            <td>{{ description['fertilizer']|title() }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"> Water (in ml/day) :</th>
+                            <td>{{ description['water'] }} </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Weather Conditions :</th>
+                            <td>{{ description['weather']|title() }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Sunlight :</th>
+                            <td>{{ description['sunlight']|title() }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Potsize :</th>
+                            <td>{{ description['potSize']|title() }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Special Requirements :</th>
+                            <td>{{ description['special']|title() }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

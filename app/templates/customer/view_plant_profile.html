@@ -15,11 +15,15 @@
         </h1>
         <h3>
             Sold By Nursery: {{ description['nID'] }} <br>
-            Plant Colour: {{ description['colour'] }} <br>
             Uses:
                 {% for use in description['uses'] %}
                     {{ use }}&nbsp; &nbsp;
-                {% endfor %} <br>
+                {% endfor %} <br> <br>
+            Choose Colours: <br>
+                {% for colour in description['colour'] %}
+                    <input type="radio" name="colour" required>
+                    <label >{{ colour }}</label>
+                {% endfor %} <br> <br>
             Plant Description: <br>
             &nbsp; Fertilizer: {{ description['fertilizer'] }} <br>
             &nbsp; Water Req: {{ description['water'] }} ml/day <br>
@@ -28,5 +32,8 @@
             &nbsp; Potsize req: {{ description['potSize'] }} <br>
             &nbsp; Special Req: {{ description['special'] }} <br>
         </h3>
+
+        <a href="#" class="btn btn-danger">Add To Cart</a>  
+        <a href="#" class="btn btn-success">Purchase</a>
     {% endif %}
 {% endblock %}

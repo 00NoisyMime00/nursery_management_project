@@ -110,7 +110,7 @@ def change_status():
         return redirect(url_for('gardener.view_plants_assigned'))
     return redirect(url_for('landing.index'))
 
-@mod_gardener.route('/view_plant_profile', methods=['GET'])
+@mod_gardener.route('/view_plant_profile_gardener', methods=['GET'])
 def view_plant_profile():
     if check_logged_in(3):
         pID = request.args.get('pID', default='')
