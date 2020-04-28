@@ -10,13 +10,23 @@
 
 {% block content %}
     {% if role == '2' %}
-        {% if IMG_PATH != none %}
-            <img src="{{ IMG_PATH }}" width="350" height="350" alt="No Plant Grown Yet..">
-        {% endif %}
-        <form action="{{ url_for('manager.update_selling_price', id=plantTypeID) }}" method="post">
-            <label for="">Updated Selling Price:</label>
-            <input type="number" step="0.01" placeholder="Updated Selling Price" name="sellingPrice"> <br>
-            <button type="submit">Update</button>
-        </form>
+        <div style = "padding: 2%;"class="jumbotron h1 text-center">
+            Update Selling Price
+            <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">Enter Price</p>
+        </div>
+        <div class="container">
+            {% if IMG_PATH != none %}
+                <div style="padding: 2% 25%;">
+                    <img src="{{ IMG_PATH }}" width="350" height="350" alt="No Plant Grown Yet..">
+                </div>
+            {% endif %}
+            <form action="{{ url_for('manager.update_selling_price', id=plantTypeID) }}" method="post">
+                <div style="padding: 2% 25%;">
+                    <label for="">Update Selling Price:</label>
+                    <input class = "form-control" type="number" step="0.01" placeholder="Update Selling Price" name="sellingPrice">
+                    <button class="btn btn-info my-5 float-right"type="submit">Update</button>    
+                </div>
+            </form>
+        </div>
     {% endif %}
 {% endblock %}

@@ -54,6 +54,9 @@ def view_plant_profile():
                 plant.plantStatus = plantStatus.SOLD
                 db.session.delete(plantAvailableColumn)
                 db.session.commit()
+            
+            if 'add_to_cart' in request.form:
+                print(request.form, "<<<<<<<<<<")
                 
 
         if 'plantTypeID' in request.args:
