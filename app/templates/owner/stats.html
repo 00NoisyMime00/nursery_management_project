@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% set role = role|default(none) %}
+{% set img_sales_stats = img_sales_stats|default(none) %}
+{% set active_page = 'view_stats' %}
+
+{% block title %}
+    Statistics
+{% endblock %}
+
+{% block content %}
+    {% if role == '1' %}
+        <img src="{{ img_sales_stats }}" alt="Sales stats not available" width="450" height="350">
+    {% endif %}
+{% endblock %}

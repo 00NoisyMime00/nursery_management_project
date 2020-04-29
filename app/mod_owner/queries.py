@@ -6,6 +6,12 @@ from app.mod_auth.models import User
 # Import employeeInfo model for Manager and gardener
 from app.mod_owner.models import employeeInfo, nurseryInfo, nurseryAddress, nurseryStaff
 
+from app.mod_manager.models import plantTypeInfo
+
+from app.mod_gardener.models import plantInfo, costToRaise
+
+from app.mod_customer.models import plantsSold
+
 from markupsafe import escape
 
 import pandas as pd
@@ -96,3 +102,44 @@ def get_stats_for_maintenance_cost(ownerID):
     fig.savefig(IMG_PATH)
     
     return IMG_PATH.split('app/')[1]
+
+def get_stats_for_sales(ownerID):
+    nurseries_list = nurseryInfo.query.filter_by(ownerID=ownerID).all()
+    index = []
+    cost_total = []
+    selling_total = []
+
+    for nursery in nurseries_list:
+        plants = plantTypeInfo.query.filter_by(nID=nursery.nID).join(plantInfo, plantTypeInfo.plantTypeID==plantInfo.plantTypeID)\
+                    .add_columns(plantInfo.pID).all()
+        
+        cost = 0
+        # For getting total cost to raise till now
+        for plant in plants:
+            cost += costToRaise.query.filter_by(pID=plant.pID).first().cost
+        cost_total.append(cost)
+
+        sold = 0
+        # For getting total plants sold
+        plants_sold = plantsSold.query.filter_by(nID=nursery.nID).all()
+
+        for plant in plants_sold:
+            sold += plant.sellingPrice
+        selling_total.append(sold)
+        
+        index.append(nursery.nID)
+    
+    a = pd.DataFrame({'Spent':cost_total, 'Earned':selling_total}, index=index)
+    a = a.astype(float)
+    fig = a.plot.bar(rot=0).get_figure()
+    fig.suptitle('Total sales Distribution', fontsize=18)
+    plt.xlabel('Nursery ID', fontsize=16)
+    plt.ylabel('Amount', fontsize=16)
+    
+    DIR = os.path.join(BASE_STATS_DIR, 'totalSales')
+    Path(DIR).mkdir(parents=True, exist_ok=True)
+    IMG_PATH = os.path.join(DIR, '{ownerID}.png'.format(ownerID=ownerID))
+    fig.savefig(IMG_PATH)
+    
+    return IMG_PATH.split('app/')[1]
+        

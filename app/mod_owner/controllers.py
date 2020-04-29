@@ -15,7 +15,7 @@ from markupsafe import escape
 
 # Function to get employee list from database
 from app.mod_owner.queries import get_employee_list, get_nurser_list,\
-    check_manager_assigned, get_manager_id, get_stats_for_maintenance_cost
+    check_manager_assigned, get_manager_id, get_stats_for_maintenance_cost, get_stats_for_sales
 
 # Import password / encryption helper tools
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -178,3 +178,10 @@ def remove_nursery(id):
         db.session.commit()
         return redirect(url_for('owner.view_nurseries'))
     return redirect(url_for('landing.index'))
+
+@mod_owner.route('/view_stats_owner', methods=['GET'])
+def view_stats():
+    if check_logged_in(1):
+        img_sales_stats = get_stats_for_sales(session['user_id'])
+        return render_template('owner/stats.html', role=str(session['role']), img_sales_stats=img_sales_stats)
+    return redirect('landing.index')
