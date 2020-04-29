@@ -99,6 +99,7 @@ def get_cart_items(userID):
         plantTypeID = plantInfo.query.filter_by(pID=item.pID).first().plantTypeID
         description = get_complete_plant_info(plantTypeID)
         description['id'] = item.pID
+        description['plantTypeID'] = plantTypeID
         item_description.append(description)
     
     return item_description

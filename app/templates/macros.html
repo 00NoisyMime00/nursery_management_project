@@ -610,7 +610,7 @@
                                 </p> 
                             </div>
                             <div class="card-footer">
-                                <a href="#" class="btn btn-primary">Visit Profile</a>
+                                <a href="{{ url_for('customer.view_plant_profile', plantTypeID=item['plantTypeID']) }}" class="btn btn-primary">Visit Profile</a>
                                 <form action="{{ url_for('customer.remove_from_cart') }}" method="post" style="display: inline;">
                                     <button type="submit" class="btn btn-danger">Remove from Cart</button>
                                     <input type="number" name="id" value="{{ item['id'] }}" style="visibility: hidden;">

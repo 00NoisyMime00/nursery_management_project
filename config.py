@@ -31,3 +31,5 @@ CSRF_SESSION_KEY = "secret"
 
 # Secret key for signing cookies
 SECRET_KEY = "secret"
+
+SEND_FILE_MAX_AGE_DEFAULT = 0
