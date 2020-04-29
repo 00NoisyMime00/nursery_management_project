@@ -100,3 +100,23 @@ def remove_from_cart():
 
         return redirect(url_for('customer.view_cart'))
     return redirect(url_for('landing.index'))
+
+@mod_customer.route('/checkout_cart', methods=['POST'])
+def checkout_cart():
+    if check_logged_in(0):
+        items = get_cart_items(session['user_id'])
+        
+        for item in items:
+            cart_item = cart.query.filter_by(customerID=session['user_id'], pID=item['id']).first()
+            transaction                  = transactionInfo(session['user_id'])
+                
+            db.session.add(transaction)
+            db.session.delete(cart_item)
+            db.session.commit()
+            
+            plant = plantInfo.query.filter_by(pID=item['id']).first()
+            db.session.add(plantsSold(transaction.transactionID, item['id'], item['nID'], item['sellingPrice']))
+            plant.plantStatus = plantStatus.SOLD
+            db.session.commit()
+        
+    return redirect(url_for('landing.index'))
