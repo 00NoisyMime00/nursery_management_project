@@ -102,3 +102,10 @@ def get_cart_items(userID):
         item_description.append(description)
     
     return item_description
+
+def get_nursery_for_plant(pID):
+
+    # nID = plantTypeInfo.query.filter_by(pID=pID).join(plantInfo, plantInfo.plantTypeID==plantTypeInfo.plantTypeID).all()
+    nID = plantInfo.query.filter_by(pID=pID).join(plantTypeInfo, plantTypeInfo.plantTypeID==plantInfo.plantTypeID)\
+                        .add_columns(plantTypeInfo.nID).first().nID
+    return nID

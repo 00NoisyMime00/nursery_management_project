@@ -9,7 +9,8 @@ from app import db
 
 from app.mod_auth.controllers import check_logged_in
 
-from app.mod_customer.queries import get_plants_available, get_complete_plant_info, get_order_history, get_cart_items
+from app.mod_customer.queries import get_plants_available, get_complete_plant_info, get_order_history, get_cart_items,\
+                                        get_nursery_for_plant
 
 from app.mod_customer.models import plantsSold, transactionInfo, cart
 
@@ -86,6 +87,16 @@ def view_cart():
         return render_template('customer/view_cart.html', role=str(session['role']), items=items)
     return redirect(url_for('landing.index'))
 
+@mod_customer.route('/remove_from_cart', methods=['POST'])
+def remove_from_cart():
+    if check_logged_in(0) and 'id' in request.form:
+        pID = int(request.form.get('id'))
+        cart_item = cart.query.filter_by(customerID=session['user_id'], pID=pID).first()
+        nID = get_nursery_for_plant(pID)
+        
+        db.session.delete(cart_item)
+        db.session.add(plantsAvailable(pID, nID))
+        db.session.commit()
 
-    
-    
+        return redirect(url_for('customer.view_cart'))
+    return redirect(url_for('landing.index'))
