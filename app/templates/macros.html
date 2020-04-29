@@ -23,6 +23,7 @@
                 ] %}
         {% elif role == '0' %}
             {% set dropdown_list = [
+                ('customer.view_cart', 'View Cart'),
                 ('customer.view_order_history', 'View Order History'),
                 ('auth.signout', 'Signout')
                 ] %}
@@ -609,7 +610,7 @@
                                 </p> 
                             </div>
                             <div class="card-footer">
-                                <a href="#" class="btn btn-danger">Visit Profile</a>
+                                <a href="#" class="btn btn-primary">Visit Profile</a>
                                 <a href="#" class="btn btn-danger">Remove from Cart</a>
                             </div>
                         </div>

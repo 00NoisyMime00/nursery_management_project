@@ -9,7 +9,7 @@ from app import db
 
 from app.mod_auth.controllers import check_logged_in
 
-from app.mod_customer.queries import get_plants_available, get_complete_plant_info, get_order_history
+from app.mod_customer.queries import get_plants_available, get_complete_plant_info, get_order_history, get_cart_items
 
 from app.mod_customer.models import plantsSold, transactionInfo, cart
 
@@ -82,7 +82,8 @@ def view_order_history():
 @mod_customer.route('/view_cart', methods=['GET', 'POST'])
 def view_cart():
     if check_logged_in(0):
-        return render_template('customer/view_cart.html', role=str(session['role']), items=[])
+        items = get_cart_items(session['user_id'])
+        return render_template('customer/view_cart.html', role=str(session['role']), items=items)
     return redirect(url_for('landing.index'))
 
 
