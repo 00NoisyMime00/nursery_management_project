@@ -4,6 +4,8 @@ from app.mod_gardener.models import plantInfo, plantStatus, plantTypeInfo, plant
 
 from app.mod_manager.models import plantImages, plantTypeUses, plantTypesAvailable, plantTypeDescription
 
+from app.mod_customer.models import transactionInfo, plantsSold
+
 def get_plants_available():
     
     plant_ids = plantTypesAvailable.query.filter_by().all()
@@ -70,3 +72,20 @@ def get_complete_plant_info(pID):
     description['special']      = plantDescription.specialRequirements
     
     return description
+
+def get_order_history(userID):
+    orders = transactionInfo.query.filter_by(customerID=userID).all()
+    order_discription = []
+
+    for order in orders:
+        plants = plantsSold.query.filter_by(transactionID=order.transactionID).all()
+        if plants != []:
+            for plant in plants:
+                plantTypeID = plantInfo.query.filter_by(pID=plant.pID).first().plantTypeID
+                description = get_complete_plant_info(plantTypeID)
+                description['id'] = plant.pID
+                description['sellingPrice'] = plant.sellingPrice
+                description['date']         = plant.dateOfSelling
+                order_discription.append(description)
+
+    return order_discription

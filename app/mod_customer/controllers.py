@@ -9,7 +9,7 @@ from app import db
 
 from app.mod_auth.controllers import check_logged_in
 
-from app.mod_customer.queries import get_plants_available, get_complete_plant_info
+from app.mod_customer.queries import get_plants_available, get_complete_plant_info, get_order_history
 
 from app.mod_customer.models import plantsSold, transactionInfo
 
@@ -65,14 +65,13 @@ def view_plant_profile():
             return render_template('customer/view_plant_profile.html', role=str(session['role']), description=description)
     return redirect(url_for('landing.index')) 
     
-@mod_customer.route('/view_orders', methods=['GET'])
-def view_orders():
-    print("pleasesse")
+@mod_customer.route('/view_order_history', methods=['GET'])
+def view_order_history():
     if(check_logged_in(0)):
-        return 'fjdkf'
-	# 	return render_template("/customer/view_orders.html", role=str(session['role']))
-	# else:
-	# 	return redirect(url_for('landing.index'))
+        print(get_order_history(session['user_id']), "<<<<<<<<<<<<<<<<<<<<")
+        orders = get_order_history(session['user_id'])
+        return render_template('customer/view_order_history.html', role=str(session['role']), userID=session['user_id'], orders=orders)
+    return redirect(url_for('landing.index'))
 
 
     
