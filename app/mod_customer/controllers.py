@@ -11,7 +11,7 @@ from app.mod_auth.controllers import check_logged_in
 
 from app.mod_customer.queries import get_plants_available, get_complete_plant_info, get_order_history
 
-from app.mod_customer.models import plantsSold, transactionInfo
+from app.mod_customer.models import plantsSold, transactionInfo, cart
 
 from app.mod_gardener.models import plantInfo, plantStatus, plantsAvailable
 
@@ -32,19 +32,24 @@ def index():
 @mod_customer.route('/view_plant_profile_customer', methods=['GET', 'POST'])
 def view_plant_profile():
     if check_logged_in(0):
-        if request.method == 'POST':
-            if 'purchase' in request.form and 'id' in request.form:
-                plantTypeID                 = int(request.form.get('id'))
-                description                 = get_complete_plant_info(plantTypeID)
+        if request.method == 'POST' and 'id' in request.form:
+            plantTypeID                 = int(request.form.get('id'))
+            description                 = get_complete_plant_info(plantTypeID)
 
-                if description['quantity'] == 0:
-                    return redirect(url_for('customer.view_plant_profile'))
+            if description['quantity'] == 0:
+                return redirect(url_for('customer.view_plant_profile'))
 
-                plant                       = plantInfo.query.filter_by(plantTypeID=plantTypeID, plantStatus=plantStatus.GROWN).first()
+            # plant                       = plantInfo.query.filter_by(plantTypeID=plantTypeID, plantStatus=plantStatus.GROWN).first()
+            plant                         = plantInfo.query\
+                                            .join(plantsAvailable, plantInfo.pID==plantsAvailable.pID)\
+                                            .first()
 
-                plantAvailableColumn         = plantsAvailable.query.filter_by(pID=plant.pID).first()
-                nID                          = description['nID']
-                sellingPrice                 = description['sellingPrice']
+            plantAvailableColumn         = plantsAvailable.query.filter_by(pID=plant.pID).first()
+            nID                          = description['nID']
+            sellingPrice                 = description['sellingPrice']
+            
+            if 'purchase' in request.form:
+                
                 transaction                  = transactionInfo(session['user_id'])
                 
                 db.session.add(transaction)
@@ -56,7 +61,10 @@ def view_plant_profile():
                 db.session.commit()
             
             if 'add_to_cart' in request.form:
-                print(request.form, "<<<<<<<<<<")
+                print(plant, plantAvailableColumn, "<<<<<<<<<<<<<<")
+                db.session.add(cart(session['user_id'], plant.pID))
+                db.session.delete(plantAvailableColumn)
+                db.session.commit()
                 
 
         if 'plantTypeID' in request.args:
@@ -68,7 +76,6 @@ def view_plant_profile():
 @mod_customer.route('/view_order_history', methods=['GET'])
 def view_order_history():
     if(check_logged_in(0)):
-        print(get_order_history(session['user_id']), "<<<<<<<<<<<<<<<<<<<<")
         orders = get_order_history(session['user_id'])
         return render_template('customer/view_order_history.html', role=str(session['role']), userID=session['user_id'], orders=orders)
     return redirect(url_for('landing.index'))

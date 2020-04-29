@@ -39,3 +39,18 @@ class plantsSold(db.Model):
     def __repr__(self):
 
         return '<transaction-{tid} pid-{pid} selling price-{cost}>'.format(tid=self.transactionID, pid=self.pID, cost=self.sellingPrice)
+
+class cart(db.Model):
+    __tablename__ = 'cart'
+
+    customerID = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+    pID        = db.Column(db.Integer, db.ForeignKey(plantInfo.pID), primary_key=True)
+
+    def __init__(self, customerID, pID):
+
+        self.customerID = customerID
+        self.pID        = pID
+
+    def __repr__(self):
+
+        return '<customer-{cid} plant-{pid}>'.format(cid=self.customerID, pid=self.pID)
