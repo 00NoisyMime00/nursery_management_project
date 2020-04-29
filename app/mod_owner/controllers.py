@@ -125,6 +125,12 @@ def add_nursery():
 @mod_owner.route('/view_nurseries', methods=['GET'])
 def view_nurseries():
     if(check_logged_in(1)):
+        PinCode = request.args.get('pin', default = '')
+        City = request.args.get('city', default='')
+        Country = request.args.get('country', default='')
+        nursery_list = get_nurser_list(session['user_id'],PinCode,City,Country)
+        if nursery_list == []:
+            nursery_list.append(('','','','','', ''))
         return render_template('owner/view_nursery.html', role=str(session['role']), nursery_list=get_nurser_list(session['user_id']))
         
     return redirect(url_for('landing.index'))

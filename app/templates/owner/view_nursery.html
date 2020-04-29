@@ -6,11 +6,65 @@
 {% from 'macros.html' import render_nurseries %}
 
 {% block title %}
-    View Employees
+    View Nurseries
 {% endblock %}
 
 {% block content %}
     {% if role == '1' %}
-        {{ render_nurseries(nursery_list) }}
+        <div style = "padding: 2%; margin: 1%; "class="jumbotron h1 text-center">
+            Your Nurseries
+            </div>
+
+            <div class="row-fluid" style = "padding: 1%;">
+            <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#sortNursery" style="float: right;">Filter</button>
+            </div>
+
+            <div class ="row">
+            <div class="col-md-8" style="overflow-y: scroll; margin: auto">
+                <div class="container-fluid">
+                    {{ render_nurseries(nursery_list) }}
+                </div>
+            </div>
+            </div>
+
+        <div class="modal fade right" id="sortNursery" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="exampleModalPreviewLabel">Filter</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body btn-block">
+                <form id="form1">
+                    <label>PinCode</label>
+                    <input type="text" name="name" id="a" placeholder="Pincode" autocomplete="off" class="form-control placeholder-no-fix">
+                    <button type="button" class="btn btn-success" onclick="modalPinCode(document.getElementById('a').value)">Add</button>
+                    <!-- </div> -->
+                    <br>
+                    <label>City</label>
+    <!-- 	            <div Id="cityy" role="groupRating" aria-label="Rating"> -->
+                    <input type="text" name="name" id="b" placeholder="City" autocomplete="off" class="form-control placeholder-no-fix">
+                    <button type="button" class="btn btn-success" onclick="modalCity(document.getElementById('b').value)">Add</button>
+                    <!-- </div> -->
+                    <br> 
+                    <label>Country</label>
+            <!--      <div Id="countryy" role="groupRating" aria-label="Rating"> -->
+                    <input type="text" name="name" id="c" placeholder="Country" autocomplete="off" class="form-control placeholder-no-fix">
+                        <button type="button" class="btn btn-success" onclick="modalCountry(document.getElementById('c').value)">Add</button>
+                    <!-- </div> -->
+                    <br>
+                </form>
+                <!-- Fixme -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" onclick="modalSaveNursery()">Save changes</button>
+            </div>
+            </div>
+        </div>
+        {#{{ render_nurseries(nursery_list) }}#}
+        </div>  
     {% endif %}
 {% endblock %}

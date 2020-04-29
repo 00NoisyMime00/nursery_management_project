@@ -74,6 +74,13 @@ class nurseryAddress(db.Model):
     def get_complete_address(self):
         return (self.pincode, self.city, self.country)
     
+    def get_pin_id(self):
+        return (self.pincode)
+    def get_city_id(self):
+        return(self.city)
+    def get_country_id(self):
+        return(self.country) 
+    
 
 class nurseryStaff(db.Model):
     __tablename__ = 'nurseryStaff'
