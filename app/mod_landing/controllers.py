@@ -15,6 +15,8 @@ def index():
     if('role' in session):
         if session['role'] == 0:
             return redirect(url_for('customer.index'))
+        if session['role'] == 1:
+            return redirect(url_for('owner.index'))
         return render_template("landing/index.html", role = str(session['role']), user_name = session['user_name'])
     
     return render_template("landing/index.html", role = None)

@@ -28,7 +28,8 @@ def index():
     if(check_logged_in(0)):
         plants_list = get_plants_available()
         
-        return render_template('landing/index.html', role=str(session['role']), plants_list=plants_list) 
+        return render_template('landing/index.html', role=str(session['role']), plants_list=plants_list)
+    return redirect(url_for('landing.index')) 
 
 @mod_customer.route('/view_plant_profile_customer', methods=['GET', 'POST'])
 def view_plant_profile():

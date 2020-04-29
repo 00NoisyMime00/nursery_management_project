@@ -15,7 +15,7 @@ from markupsafe import escape
 
 # Function to get employee list from database
 from app.mod_owner.queries import get_employee_list, get_nurser_list,\
-    check_manager_assigned, get_manager_id
+    check_manager_assigned, get_manager_id, get_stats_for_maintenance_cost
 
 # Import password / encryption helper tools
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -29,10 +29,11 @@ from app.mod_owner.forms import registerNurseryForm, RegisterWorker
 mod_owner = Blueprint('owner', __name__, url_prefix='/')
 
 
-@mod_owner.route('/', methods=['GET'])
+@mod_owner.route('/welcome_owner', methods=['GET'])
 def index():
     if check_logged_in(session['role']):
-        return redirect(url_for('landing.index'))
+        IMG_PATH = get_stats_for_maintenance_cost(session['user_id'])
+        return render_template('landing/index.html', role=str(session['role']), maintenance_img=IMG_PATH)
     else:
         return redirect(url_for('landing.index'))
 

@@ -8,6 +8,16 @@ from app.mod_owner.models import employeeInfo, nurseryInfo, nurseryAddress, nurs
 
 from markupsafe import escape
 
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+
+from config import BASE_STATS_DIR
+
+import os
+from pathlib import Path
+
+
 # Gives employee detials of all employees under an owner
 def get_employee_list(ownerID, status=''):
     manager_id_list = employeeInfo.query.filter_by(ownerID = ownerID).all()
@@ -61,3 +71,28 @@ def get_manager_id(nID):
     for employee in employee_list:
         if User.query.get(employee.eID).role == 2:
            return employee.eID
+
+def get_stats_for_maintenance_cost(ownerID):
+    nurseries_list = nurseryInfo.query.filter_by(ownerID=ownerID).all()
+    cost_list = []
+    index     = []
+
+    for nursery in nurseries_list:
+        index.append(nursery.nID)
+        cost_list.append(nursery.maintenanceCost + nursery.labourCost)
+    
+    if cost_list == []:
+        return
+    a = pd.DataFrame({'cost':cost_list}, index=index)
+    a = a.astype(float)
+    fig = a.plot.bar(rot=0).get_figure()
+    fig.suptitle('Maintenance and Labour Cost Distribution', fontsize=18)
+    plt.xlabel('Nursery ID', fontsize=16)
+    plt.ylabel('Total Cost', fontsize=16)
+    
+    DIR = os.path.join(BASE_STATS_DIR, 'maintenanceCost')
+    Path(DIR).mkdir(parents=True, exist_ok=True)
+    IMG_PATH = os.path.join(DIR, '{ownerID}.png'.format(ownerID=ownerID))
+    fig.savefig(IMG_PATH)
+    
+    return IMG_PATH.split('app/')[1]

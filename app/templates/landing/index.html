@@ -3,6 +3,7 @@
 {% set active_page = 'index' %}
 {% set role = role|default(none) %}
 {% set plants_list = plants_list|default(none) %}
+{% set maintenance_img = maintenance_img|default(none) %}
 {% from 'macros.html' import render_plants_customer %}
 
 {% block title %}
@@ -29,6 +30,8 @@
                 </div>
             </div>
     
+        {% elif role == '1' %}
+            <img src="{{ maintenance_img }}" alt="No Graphs Available for maintenance yet" width="450" height="300">
         {% else %}
             <div class="jumbotron h1 text-center">
                 Welcome {{ user_name }}
