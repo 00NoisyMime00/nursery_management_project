@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% set active_page = 'view_cart' %}
+{% set role = role|default(none) %}
+{% set items = items|default(none) %}
+{% from 'macros.html' import render_cart %}
+
+{% block title %}
+    View Cart
+{% endblock %}
+
+{% block content %}
+    {% if role == '0' %}
+        <div style = "padding: 2%;"class="jumbotron h1 text-center">
+            Nusery Mangement Simplified
+            <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">Cart</p>
+        </div>
+        <div class ="row">
+            <div class="col-md-8" style="overflow-y: scroll; margin: auto">
+              <div class="container-fluid">
+                {{ render_cart(items) }}
+              </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

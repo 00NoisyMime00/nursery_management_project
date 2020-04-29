@@ -39,7 +39,6 @@ def view_plant_profile():
             if description['quantity'] == 0:
                 return redirect(url_for('customer.view_plant_profile'))
 
-            # plant                       = plantInfo.query.filter_by(plantTypeID=plantTypeID, plantStatus=plantStatus.GROWN).first()
             plant                         = plantInfo.query\
                                             .join(plantsAvailable, plantInfo.pID==plantsAvailable.pID)\
                                             .first()
@@ -61,7 +60,7 @@ def view_plant_profile():
                 db.session.commit()
             
             if 'add_to_cart' in request.form:
-                print(plant, plantAvailableColumn, "<<<<<<<<<<<<<<")
+
                 db.session.add(cart(session['user_id'], plant.pID))
                 db.session.delete(plantAvailableColumn)
                 db.session.commit()
@@ -78,6 +77,12 @@ def view_order_history():
     if(check_logged_in(0)):
         orders = get_order_history(session['user_id'])
         return render_template('customer/view_order_history.html', role=str(session['role']), userID=session['user_id'], orders=orders)
+    return redirect(url_for('landing.index'))
+
+@mod_customer.route('/view_cart', methods=['GET', 'POST'])
+def view_cart():
+    if check_logged_in(0):
+        return render_template('customer/view_cart.html', role=str(session['role']), items=[])
     return redirect(url_for('landing.index'))
 
 
