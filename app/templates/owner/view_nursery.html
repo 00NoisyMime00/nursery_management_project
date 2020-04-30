@@ -38,29 +38,29 @@
             </div>
             <div class="modal-body btn-block">
                 <form id="form1">
-                    <label>PinCode</label>
-                    <input type="text" name="name" id="a" placeholder="Pincode" autocomplete="off" class="form-control placeholder-no-fix">
-                    <button type="button" class="btn btn-success" onclick="modalPinCode(document.getElementById('a').value)">Add</button>
-                    <!-- </div> -->
+                    <div class="form-inline">
+                        <label class="mx-2">PinCode</label>
+                        <input type="text" name="name" id="a" placeholder="Pincode" autocomplete="off" class="form-control placeholder-no-fix mx-4">
+                        <button type="button" class="mx-2 btn btn-success my-3" onclick="modalPinCode(document.getElementById('a').value)">Add</button>
+                    </div>
                     <br>
-                    <label>City</label>
-    <!-- 	            <div Id="cityy" role="groupRating" aria-label="Rating"> -->
-                    <input type="text" name="name" id="b" placeholder="City" autocomplete="off" class="form-control placeholder-no-fix">
-                    <button type="button" class="btn btn-success" onclick="modalCity(document.getElementById('b').value)">Add</button>
-                    <!-- </div> -->
-                    <br> 
-                    <label>Country</label>
-            <!--      <div Id="countryy" role="groupRating" aria-label="Rating"> -->
-                    <input type="text" name="name" id="c" placeholder="Country" autocomplete="off" class="form-control placeholder-no-fix">
-                        <button type="button" class="btn btn-success" onclick="modalCountry(document.getElementById('c').value)">Add</button>
-                    <!-- </div> -->
+                    <div class="form-inline">
+                        <label class="mx-2">City &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <input type="text" name="name" id="b" placeholder="City" autocomplete="off" class="form-control placeholder-no-fix mx-4">
+                        <button type="button" class="mx-2 btn btn-success my-3" onclick="modalCity(document.getElementById('b').value)">Add</button>
+                    </div>
+                    <br>
+                    <div class="form-inline">
+                        <label class="mx-2">Country &nbsp;</label>
+                        <input type="text" name="name" id="c" placeholder="Country" autocomplete="off" class="form-control placeholder-no-fix mx-4">
+                        <button type="button" class="mx-2 btn btn-success my-3" onclick="modalCountry(document.getElementById('c').value)">Add</button>
+                    </div>
                     <br>
                 </form>
-                <!-- Fixme -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success" onclick="modalSaveNursery()">Save changes</button>
+                <button type="button" class="btn btn-info" onclick="modalSaveNursery()">Save changes</button>
             </div>
             </div>
         </div>

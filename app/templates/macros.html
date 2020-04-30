@@ -107,7 +107,7 @@
                 <div class = "card text-white bg bg-dark mb-3">
                     <div class="row no-gutters">
                         <div class ="col-md-4">
-                            <img src ="/static/images/plants/6/15/p1.png"class="card-img" alt="...">
+                            <img src ="https://www.pngkey.com/png/detail/521-5214782_alexander-ariel-placeholder-person.png" class="card-img h-100" alt="Employee Image">
                         </div>
                         <div class="col-md-8">
                             <div class="card-header">
@@ -115,12 +115,14 @@
                             </div>
                             <div class="card-body">
                                 <p class="card-text">
-                                {{designation}}<br>{{emailID}}
+                                {{designation}}
+                                <br>
+                                {{emailID}}
                                 </p> 
                             </div>
                             <div class="card-footer">
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
-                                <a href="#" class="btn btn-danger">Go somewhere</a>  
+                                <a href="#" class="btn btn-primary mx-2">Go somewhere</a>
+                                <a href="#" class="btn btn-danger mx-2">Go somewhere</a>  
                             </div>
                         </div>
 
@@ -148,13 +150,13 @@
         ] %}
     {% for id, maintenance, labour, pincode, city, country in nursery_list %}
         <div class ="card-deck">
-                <div class = "card text-white bg bg-dark mb-3">
+                <div class = "shadow card mb-3">
                     <div class="row no-gutters">
-                        <div class="col-md-8">
-                            <div class="card-header">
-                                <h3>Nursery ID:{{id}}</h3>
+                        <div class="col-md-12">
+                            <div class="card-header bg bg-dark text-white">
+                                <h3>Nursery ID: {{id}}</h3>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body bg-light">
                                 <p class="card-text">
                                 Maintainance Cost : {{ maintenance }} <br>
                                 Labour Cost: {{ labour }} <br>
@@ -167,7 +169,7 @@
                                 <!-- Drop down starts -->
                                 <div class="btn-group">
                                     <!-- Dropdown button(only when signed in) -->
-                                    <button type="button" class="btn btn-secondary dropdown-toggle bg-dark" style="border: none;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-primary dropdown-toggle " style="border: none;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <a  href="{{url_for('landing.index')}}" style="text-decoration: none;">
                                             <i class="fas fa-cogs fa-2x ml-sm-2" style="color: #ffff;"></i>
                                         </a>
