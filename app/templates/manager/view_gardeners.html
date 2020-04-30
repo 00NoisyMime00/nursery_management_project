@@ -16,11 +16,11 @@
             <p style="padding-top: 0.5%; color: dimgray; font-size: medium;";">View Gardeners</p>
         </div>
 
-        <!-- Sort by button -->
       <div class="row-fluid">
-        <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#sortEmployee" style="float: right;">Filter
+        <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#rateEmployee" style="float: right;">Rate Employee
           </button>
       </div>
+
 
       <div class ="row">
         <div class="col-md-8" style="overflow-y: scroll;">
@@ -66,5 +66,34 @@
         </div>
       </div>
       </div>  
+
+      <!-- Modal for rate employee-->
+      <form action="{{ url_for('manager.rate_gardener') }}" method="post">
+        <div class="modal fade right" id="rateEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title text-dark" id="exampleModalPreviewLabel">Rate Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body btn-block"> 
+                <ul>
+                    <label for="">Email ID:</label>
+                    <input type="text" name="emailID" required><br>
+                    <label for="score">Score:</label> 
+                    <input type="number" name="score" required>
+                </ul>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success" onclick="">Rate</button>
+                </div>
+            </div>
+            </div> 
+            </div>
+        </form>
+        <!-- Modal for buy rate employee ends -->
     {% endif %}
 {% endblock %}

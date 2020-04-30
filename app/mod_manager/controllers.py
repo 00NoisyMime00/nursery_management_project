@@ -18,7 +18,8 @@ from app.mod_auth.models import User
 # Import employeeInfo model for Manager and gardener
 from app.mod_owner.models import employeeInfo, nurseryStaff
 
-from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescription, plantTypeUses, plantTypesAvailable
+from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescription, plantTypeUses, plantTypesAvailable,\
+                                    employeeRating
 
 from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorInfo, vendorSeedInfo, plantInfo, plantStatus
 
@@ -48,6 +49,8 @@ from io import BytesIO
 # Base directory to store images
 from config import BASE_IMG_DIR
 from app.mod_manager.forms import AddPlantForm, AddGardenerForm
+
+from datetime import datetime
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -322,3 +325,31 @@ def view_stats():
             return render_template('manager/stats.html', role=str(session['role']), img_seed_available=img_seed_available)
     
     return redirect(url_for('landing.index'))
+
+@mod_manager.route('/rate_gardener', methods=['POST'])
+def rate_gardener():
+    if check_logged_in(2):
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
+        if nID != None:
+            nID = nID.nID
+
+            emailID = request.form.get('emailID')
+            score = int(request.form.get('score'))
+            employee = User.query.filter_by(emailID=emailID).first()
+            rating_column = employeeRating.query.filter_by(eID=employee.id).all()
+            if rating_column == []:
+                db.session.add(employeeRating(employee.id, score))
+                db.session.commit()
+            else:
+                for rating in rating_column:
+                    if rating.date.month == datetime.now().month:
+                        rating.score = score
+                        db.session.commit()
+                        return redirect(url_for('landing.index'))
+                
+                db.session.add(employeeRating(employee.id, score))
+                db.session.commit()
+    
+    return redirect(url_for('landing.index'))
+
+

@@ -4,7 +4,7 @@ from app import db
 
 import enum
 
-from app.mod_owner.models import nurseryInfo
+from app.mod_owner.models import nurseryInfo, employeeInfo
 
 class plantTypeInfo(db.Model):
     __tablename__ = 'plantTypeInfo'
@@ -120,3 +120,19 @@ class plantTypesAvailable(db.Model):
     def __repr__(self):
 
         return '<plant type-{pid} nursery-{nid}>'.format(pid=self.plantTypeID, nid=self.nID)
+
+class employeeRating(db.Model):
+    __tablename__ = 'employeeRating'
+
+    eID = db.Column(db.Integer, db.ForeignKey(employeeInfo.eID), primary_key=True)
+    date = db.Column(db.DateTime, primary_key=True, default=db.func.current_timestamp())
+    score = db.Column(db.Integer, db.CheckConstraint('score <= 10'))
+
+    def __init__(self, eID, score):
+
+        self.eID = eID
+        self.score = score
+
+    def __repr__(self):
+
+        return '<eid-{eid} date-{date} score-{score}>'.format(eid=self.eID, date=self.date, score=self.score)
