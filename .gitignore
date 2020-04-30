@@ -1,9 +1,0 @@
-venv/
-__pycache__/
-app.db
-secret.py
-.directory
-.vscode
-images/
-stats/
-.gitignore
