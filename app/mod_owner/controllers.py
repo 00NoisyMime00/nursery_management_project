@@ -39,7 +39,6 @@ def index():
 
 @mod_owner.route('/add_manager', methods=['GET', 'POST'])
 def add_manager():
-    print(check_logged_in(1))
     if check_logged_in(1):
         form = RegisterWorker(request.form)
         if request.method == 'POST' and form.validate():
@@ -129,14 +128,9 @@ def view_nurseries():
         PinCode = request.args.get('pin', default = '')
         City = request.args.get('city', default='')
         Country = request.args.get('country', default='')
-        # PinCode="110084"
-        # City = "Delhi"
-        # Country = "India"
-        # print(PinCode,City,Country)
         nursery_list = get_nurser_list(session['user_id'],PinCode,City,Country)
         if nursery_list == []:
             nursery_list.append(('','','','','', ''))
-        # print(nursery_list)
         return render_template('owner/view_nursery.html', role=str(session['role']), nursery_list=nursery_list)
     return redirect(url_for('landing.index'))
 
