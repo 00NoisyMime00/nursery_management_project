@@ -147,31 +147,47 @@
         ('owner.remove_nursery', 'Remove Nursery')
         ] %}
     {% for id, maintenance, labour, pincode, city, country in nursery_list %}
-        <ul>
-            <h1><li>
-                {{ maintenance }} |  {{ labour }} | {{ pincode }} | {{ city }}   |  {{ country }} 
-                <!-- Drop down starts -->
-                <div class="btn-group">
-                    <!-- Dropdown button(only when signed in) -->
-                    <button type="button" class="btn btn-secondary dropdown-toggle bg-dark" style="border: none;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <a  href="{{url_for('landing.index')}}" style="text-decoration: none;">
-                            <i class="fas fa-cogs fa-2x ml-sm-2" style="color: #ffff;"></i>
-                        </a>
-                    </button>
-
-                    <!-- Drop down Items -->
-                    <div class="dropdown-menu dropdown-menu-right">
-                        {% for href, caption in dropdown_list%}
-                            <a href="{{ url_for(href, id=id) }}" style="text-decoration: none;">
-                                <button class="dropdown-item" type="button">
-                                    {{ caption }}
-                                </button>
-                            </a>
-                        {% endfor %}
+        <div class ="card-deck">
+                <div class = "card text-white bg bg-dark mb-3">
+                    <div class="row no-gutters">
+                        <div class="col-md-8">
+                            <div class="card-header">
+                                <h3>Nursery ID:{{id}}</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                Maintainance Cost : {{ maintenance }} <br>
+                                Labour Cost: {{ labour }} <br>
+                                Pincode : {{ pincode }} <br>
+                                City : {{ city }} <br>
+                                Country :  {{ country }}
+                                </p> 
+                            </div>
+                            <div class="card-footer">
+                                <!-- Drop down starts -->
+                                <div class="btn-group">
+                                    <!-- Dropdown button(only when signed in) -->
+                                    <button type="button" class="btn btn-secondary dropdown-toggle bg-dark" style="border: none;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <a  href="{{url_for('landing.index')}}" style="text-decoration: none;">
+                                            <i class="fas fa-cogs fa-2x ml-sm-2" style="color: #ffff;"></i>
+                                        </a>
+                                    </button>
+                                    <!-- Drop down Items -->
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        {% for href, caption in dropdown_list%}
+                                        <a href="{{ url_for(href, id=id) }}" style="text-decoration: none;">
+                                            <button class="dropdown-item" type="button">
+                                                {{ caption }}
+                                            </button>
+                                        </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </li></h1>
-        </ul>
+            </div>
     {% endfor %}
 {% endmacro %}
 <!-- nurseries macro ends -->
