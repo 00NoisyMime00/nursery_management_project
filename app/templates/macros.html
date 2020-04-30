@@ -22,12 +22,14 @@
                 ('owner.view_stats', 'View Stats'),
                 ('auth.signout', 'Signout')
                 ] %}
+            {% set home_url = "/welcome_owner" %}
         {% elif role == '0' %}
             {% set dropdown_list = [
                 ('customer.view_cart', 'View Cart'),
                 ('customer.view_order_history', 'View Order History'),
                 ('auth.signout', 'Signout')
                 ] %}
+            {% set home_url = "/welcome" %}
         {% elif role == '2' %}
             {% set dropdown_list = [
                 ('manager.add_plant', 'Add Plant'),
@@ -38,6 +40,7 @@
                 ('manager.view_stats', 'View Stats'),
                 ('auth.signout', 'Signout')
                 ] %}
+            {% set home_url = "/" %}
         {% elif role == '3' %}
             {% set dropdown_list = [
                 ('gardener.view_plant_types', 'View Plant Types'),
@@ -45,20 +48,17 @@
                 ('gardener.view_stats', 'View Stats'),
                 ('auth.signout', 'Signout')
                 ] %}
+            {% set home_url = "/" %}
         {% endif %}
     {% endif %}
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark nav">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark nav">
         <i class="fab fa-pagelines fa-3x mr-sm-3" style="color:#228B22;"></i>
+        <a class="navbar-brand" href= {{ home_url }} >Nursery Management System</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
         </button>
         
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
                 
