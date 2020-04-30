@@ -9,6 +9,11 @@
 
 {% block content %}
     {% if role == '2' %}
-        <img src="{{ img_seed_available }}" alt="NO graph for Total seeds comparison available" width="450" height="350">
+        <div style = "padding: 3%;"class="jumbotron h1 text-center">
+            Statistics
+        </div>
+        <div class="container text-center">
+           <h4> <img class="m-5 " src="{{ img_seed_available }}" alt="NO graph for Total seeds comparison available" width="450" height="350"> </h4>
+        </div>
     {% endif %}
 {% endblock %}
