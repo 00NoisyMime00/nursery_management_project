@@ -31,24 +31,31 @@
             </div>
     
         {% elif role == '1' %}
-            <div class ="row-fluid" >
-                <h3> Stats </h3>
+            <div class="jumbotron h1 text-center">
+                Welcome {{ user_name }}
             </div>
-            <div class ="row -fluid">
-                <div class="card mb-3 bg-secondary" >
-                    <div class="row no-gutters">
-                        <div class="col-md-4">
-                            <img src="{{ maintenance_img }}" class="card-img" alt="No Graphs Available for maintenance yet">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            <div class ="text-center row-fluid py-2 mb-4" >
+                <h2> Showing Statistics </h2>
+            </div>
+            <div class="container text-center">
+                <img style="max-height: 1600px; max-width: 1200px; padding: 5% 10%;" src="{{ maintenance_img }}" class="card-img" alt="No Graphs Available for maintenance yet">
+                <h3 class="pb-5"> Plot comparing expenditure among different nurseries </h3>
+                <!-- <div class ="row -fluid">
+                    <div class="card mb-3 bg-secondary" >
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         {% else %}
             <div class="jumbotron h1 text-center">
