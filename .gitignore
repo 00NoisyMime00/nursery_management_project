@@ -6,3 +6,4 @@ secret.py
 .vscode
 images/
 stats/
+.gitignore
