@@ -298,7 +298,7 @@
                                 </p> 
                             </div>
                             <div class="card-footer">
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <a href="{{ url_for('gardener.view_plant_type_profile', plantTypeID=plant['id']) }}" class="btn btn-primary">Visit Profile</a>
                                 <a href="." class="btn btn-danger" data-toggle="modal" data-target="#{{plant['name']}}">Sow Seeds</a>  
                             </div>
                         </div>

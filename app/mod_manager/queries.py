@@ -10,7 +10,10 @@ from app.mod_auth.models import User
 
 from app.mod_owner.models import nurseryStaff
 
-from app.mod_gardener.models import seedTypeInfo, vendorSeedInfo, vendorInfo, plantInfo, plantStatus, costToRaise
+from app.mod_gardener.models import seedTypeInfo, vendorSeedInfo, vendorInfo, plantInfo, plantStatus, costToRaise,\
+                                   seedTypeInfo, seedBatchInfo, seedAvailable
+
+from app.mod_manager.models import plantTypeInfo
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -70,4 +73,33 @@ def get_stats_for_selling_price(plantTypeID):
     fig.savefig(IMG_PATH)
     
     return IMG_PATH.split('app/')[1]
+
+def get_stats_for_seed_available(nID):
+    plant_type_ids = plantTypeInfo.query.filter_by(nID=nID).all()
+    index = []
+    seed_type_total = []
+
+    for plant_type_id in plant_type_ids:
+        seed_type_ids = seedTypeInfo.query.filter_by(plantTypeID=plant_type_id.plantTypeID)\
+            .join(seedBatchInfo, seedBatchInfo.seedTypeID==seedTypeInfo.seedTypeID)\
+                .add_column(seedBatchInfo.seedBatchID).all()
+        total_seeds = 0
+
+        for seed_type in seed_type_ids:
+            total_seeds += seedAvailable.query.filter_by(seedBatchID=seed_type.seedBatchID, nID=nID).first().quantity
+        
+        seed_type_total.append(total_seeds)
+        index.append(plant_type_id.plantTypeName)
     
+    a = pd.DataFrame({'Seeds Available':seed_type_total}, index=index)
+    fig = a.plot.bar(rot=0).get_figure()
+    fig.suptitle('Seeds Available Distribution', fontsize=18)
+    plt.xlabel('Plant Type Name', fontsize=16)
+    plt.ylabel('Number', fontsize=16)
+    
+    DIR = os.path.join(BASE_STATS_DIR, 'seedsAvailable')
+    Path(DIR).mkdir(parents=True, exist_ok=True)
+    IMG_PATH = os.path.join(DIR, '{nID}.png'.format(nID=nID))
+    fig.savefig(IMG_PATH)
+    
+    return IMG_PATH.split('app/')[1]

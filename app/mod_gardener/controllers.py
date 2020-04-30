@@ -16,6 +16,8 @@ from app.mod_manager.models import plantTypeInfo
 from app.mod_gardener.queries import get_complete_plant_description, get_seeds_to_sow, get_plants_assigned, get_plant_profile,\
                 get_stats_for_status_comparison
 
+from app.mod_customer.queries import get_complete_plant_info
+
 # import checked_logged_in function
 from app.mod_auth.controllers import check_logged_in
 
@@ -145,3 +147,12 @@ def view_stats():
         img_status_comparison = get_stats_for_status_comparison(session['user_id'])
         return render_template('gardener/stats.html', role=str(session['role']), img_status_comparison=img_status_comparison)
     return redirect(url_for('landing.index'))
+
+@mod_gardener.route('/view_plant_type_profile_gardener', methods=['GET'])
+def view_plant_type_profile():
+    if check_logged_in(3) and 'plantTypeID' in request.args:
+        
+        plantTypeID = request.args.get('plantTypeID')
+        description = get_complete_plant_info(plantTypeID)
+        return render_template('gardener/view_plant_type_profile.html', role=str(session['role']), description=description)
+    return redirect(url_for('landing.index')) 

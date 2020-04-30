@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% set active_page = 'stats.html' %}
+{% set role = role|default(none) %}
+{% set img_seed_available = img_seed_available|default(none) %}
+
+{% block title %}
+    Stats
+{% endblock %}
+
+{% block content %}
+    {% if role == '2' %}
+        <img src="{{ img_seed_available }}" alt="NO graph for Total seeds comparison available" width="450" height="350">
+    {% endif %}
+{% endblock %}

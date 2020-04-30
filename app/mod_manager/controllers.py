@@ -22,7 +22,7 @@ from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescript
 
 from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorInfo, vendorSeedInfo, plantInfo, plantStatus
 
-from app.mod_manager.queries import get_gardeners, get_vendors, get_stats_for_selling_price
+from app.mod_manager.queries import get_gardeners, get_vendors, get_stats_for_selling_price, get_stats_for_seed_available
 
 from app.mod_gardener.queries import get_complete_plant_description
 
@@ -308,5 +308,17 @@ def update_selling_price():
                 return redirect(url_for('manager.view_plants'))
             IMG_PATH = get_stats_for_selling_price(plantTypeID)
             return render_template('manager/update_selling_price.html', plantTypeID=plantTypeID, role=str(session['role']), IMG_PATH=IMG_PATH)
+    
+    return redirect(url_for('landing.index'))
+
+@mod_manager.route('/view_stats_manager', methods=['GET'])
+def view_stats():
+    if check_logged_in(2):
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
+        if nID != None:
+            nID = nID.nID
+
+            img_seed_available = get_stats_for_seed_available(nID)
+            return render_template('manager/stats.html', role=str(session['role']), img_seed_available=img_seed_available)
     
     return redirect(url_for('landing.index'))
