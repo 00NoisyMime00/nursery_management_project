@@ -9,6 +9,11 @@
 
 {% block content %}
     {% if role == '3' %}
-        <img src="{{ img_status_comparison }}" alt="NO graph for plant status comparison available" width="450" height="350">
+        <div style = "padding: 3%;"class="jumbotron h1 text-center">
+            Statistics
+        </div>
+        <div class="container text-center">
+            <img class="m-5 " src="{{ img_status_comparison }}" alt="NO graph for plant status comparison available" width="450" height="350">
+        </div>
     {% endif %}
 {% endblock %}
