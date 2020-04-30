@@ -7,6 +7,15 @@ from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, 
 
 from app.mod_auth.models import User
 
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+
+from config import BASE_STATS_DIR
+
+import os
+from pathlib import Path
+
 def get_complete_plant_description(pID):
     description = {}
     
@@ -49,7 +58,6 @@ def get_seeds_to_sow(plantTypeID):
         seed_description['vendor_name'] = vendorInfo.query.filter_by(vendorID=vendor.vendorID).first().vendorName
         seed_description['cost']        = vendor.seedCost
         
-        print(seed,seedBatch,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,")
         seed_description['id']          = seedBatch.seedBatchID
         seed_description['date']        = seedBatch.dateOfPurchase.date()
         seed_description['batch_size']  = seedAvailable.query.filter_by(seedBatchID=seedBatch.seedBatchID).first().quantity
@@ -115,4 +123,45 @@ def get_plant_profile(pID):
     description['gardenerID']   = gardenerID
 
     return description
+
+def get_stats_for_status_comparison(gardnerID):
+    plant_ids = gardenerOfPlant.query.filter_by(eID=gardnerID).all()
+    grown_plants = []
+    growing_plants = []
+    sold_plants = []
+    dead_plants = []
+    index = {'growing':{}, 'grown':{}, 'sold':{}}  # Plant Types
+
+    for plant_id in plant_ids:
+        plant = plantInfo.query.filter_by(pID=plant_id.pID).first()
+        try:
+            index['growing'][plant.plantTypeID]
+            index['grown'][plant.plantTypeID]
+            index['sold'][plant.plantTypeID]
+        except:
+            index['growing'][plant.plantTypeID] = 0
+            index['grown'][plant.plantTypeID] = 0
+            index['sold'][plant.plantTypeID] = 0
+        
+    
+        if plant.plantStatus == plantStatus.GROWING:
+            index['growing'][plant.plantTypeID] += 1
+        elif plant.plantStatus == plantStatus.GROWN:
+            index['grown'][plant.plantTypeID] += 1
+        elif plant.plantStatus == plantStatus.SOLD:
+            index['sold'][plant.plantTypeID] += 1
+
+    a = pd.DataFrame(index)
+    fig = a.plot.bar(rot=0).get_figure()
+    fig.suptitle('Plant Status Distribution', fontsize=18)
+    plt.xlabel('Plant Type', fontsize=16)
+    plt.ylabel('Numbers', fontsize=16)
+    
+    DIR = os.path.join(BASE_STATS_DIR, 'plantsStatusComparison')
+    Path(DIR).mkdir(parents=True, exist_ok=True)
+    IMG_PATH = os.path.join(DIR, '{gardenerID}.png'.format(gardenerID=gardnerID))
+    fig.savefig(IMG_PATH)
+    
+    return IMG_PATH.split('app/')[1]
+        
     

@@ -57,22 +57,19 @@ def get_employee_list(ownerID, status=''):
 def get_nurser_list(ownerID, pin='' ,city='',country=''):
     nursery_list = nurseryInfo.query.filter_by(ownerID=ownerID).all()
     nursery_details_list = []
-    print(pin,city,country)
+    
     for nursery in nursery_list:
-        # print(nurseryAddress.query.filter_by(nID=nursery.nID).first().get_city_id())
-        if pin!='' and str(nurseryAddress.query.filter_by(nID=nursery.nID).first().get_pin_id()) == pin:
+
+        if pin != '' and str(nurseryAddress.query.filter_by(nID=nursery.nID).first().get_pin_id()) == pin:
             nursery_details_list.append( nursery.get_details().__add__(nurseryAddress.query.filter_by(nID = nursery.nID).first().get_complete_address() ) )
         
-        elif city!='' and (nurseryAddress.query.filter_by(nID=nursery.nID).first().get_city_id()).lower() == city.lower():
-            # print("vbdbvsbv")
+        elif city != '' and (nurseryAddress.query.filter_by(nID=nursery.nID).first().get_city_id()).lower() == city.lower():
             nursery_details_list.append( nursery.get_details().__add__(nurseryAddress.query.filter_by(nID = nursery.nID).first().get_complete_address() ) )
         
-        elif country!='' and (nurseryAddress.query.filter_by(nID=nursery.nID).first().get_country_id()).lower() == country.lower():
+        elif country != '' and (nurseryAddress.query.filter_by(nID=nursery.nID).first().get_country_id()).lower() == country.lower():
             nursery_details_list.append( nursery.get_details().__add__(nurseryAddress.query.filter_by(nID = nursery.nID).first().get_complete_address() ) )
-        elif pin=='' and city=='' and country =="":
+        elif pin == '' and city == '' and country == "":
             nursery_details_list.append( nursery.get_details().__add__(nurseryAddress.query.filter_by(nID = nursery.nID).first().get_complete_address() ) )
-        # else:
-        #     nursery_details_list.append( nursery.get_details().__add__(nurseryAddress.query.filter_by(nID = nursery.nID).first().get_complete_address() ) )
     return nursery_details_list
 
 def check_manager_assigned(nID):

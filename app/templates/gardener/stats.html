@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% set active_page = 'stats.html' %}
+{% set role = role|default(none) %}
+{% set img_status_comparison = img_status_comparison|default(none) %}
+
+{% block title %}
+    Stats
+{% endblock %}
+
+{% block content %}
+    {% if role == '3' %}
+        <img src="{{ img_status_comparison }}" alt="NO graph for plant status comparison available" width="450" height="350">
+    {% endif %}
+{% endblock %}

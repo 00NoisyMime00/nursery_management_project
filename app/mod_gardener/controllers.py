@@ -13,7 +13,8 @@ from app.mod_owner.models import nurseryStaff
 
 from app.mod_manager.models import plantTypeInfo
 
-from app.mod_gardener.queries import get_complete_plant_description, get_seeds_to_sow, get_plants_assigned, get_plant_profile
+from app.mod_gardener.queries import get_complete_plant_description, get_seeds_to_sow, get_plants_assigned, get_plant_profile,\
+                get_stats_for_status_comparison
 
 # import checked_logged_in function
 from app.mod_auth.controllers import check_logged_in
@@ -136,4 +137,11 @@ def update_cost_to_raise():
         plant.cost  += cost
         db.session.commit()
         return redirect(url_for('gardener.view_plants_assigned'))
+    return redirect(url_for('landing.index'))
+
+@mod_gardener.route('/view_stats_gardener', methods=['GET'])
+def view_stats():
+    if check_logged_in(3):
+        img_status_comparison = get_stats_for_status_comparison(session['user_id'])
+        return render_template('gardener/stats.html', role=str(session['role']), img_status_comparison=img_status_comparison)
     return redirect(url_for('landing.index'))
