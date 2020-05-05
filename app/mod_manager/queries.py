@@ -11,9 +11,11 @@ from app.mod_auth.models import User
 from app.mod_owner.models import nurseryStaff
 
 from app.mod_gardener.models import seedTypeInfo, vendorSeedInfo, vendorInfo, plantInfo, plantStatus, costToRaise,\
-                                   seedTypeInfo, seedBatchInfo, seedAvailable
+                                   seedTypeInfo, seedBatchInfo, seedAvailable, gardenerOfPlant
 
-from app.mod_manager.models import plantTypeInfo
+from app.mod_manager.models import plantTypeInfo, plantImages
+
+from app.mod_customer.models import complaints
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -103,3 +105,36 @@ def get_stats_for_seed_available(nID):
     fig.savefig(IMG_PATH)
     
     return IMG_PATH.split('app/')[1]
+
+def get_active_complaints(nID):
+    active_complaints = complaints.query.filter_by(nID = nID).all()
+    complaint_description = []
+
+    for complaint in active_complaints:
+        if complaint.complaintStatus == 0:
+            description                     = {}
+            description['pID']              = complaint.pID
+            
+            plant                           = plantInfo.query.filter_by(pID=description['pID']).first()
+            plantType                       = plantTypeInfo.query.filter_by(plantTypeID=plant.plantTypeID).first()
+            gardenerID                      = gardenerOfPlant.query.filter_by(pID=plant.pID).first()
+            
+            description['nID']              = nID
+            description['description']      = complaint.description
+            description['date']             = complaint.date.date()
+            description['name']             = plantType.plantTypeName
+            description['image']            = plantImages.query.filter_by(plantTypeID=plant.plantTypeID).first().imageLink
+            description['complaintNumber']  = complaint.complaintNumber
+            description['gardenerName']     = User.query.filter_by(id=gardenerID.eID).first().name
+            description['gardenerID']       = gardenerID.eID
+
+            complaint_description.append(description)
+    
+    return complaint_description
+
+def resolve_complaint(complaintNumber):
+    active_complaint = complaints.query.filter_by(complaintNumber=complaintNumber).first()
+
+    if active_complaint != None and active_complaint.complaintStatus == 0:
+        active_complaint.complaintStatus = 1
+        db.session.commit()

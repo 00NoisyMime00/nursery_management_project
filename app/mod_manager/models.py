@@ -4,7 +4,10 @@ from app import db
 
 import enum
 
+from app.mod_auth.models import User
+
 from app.mod_owner.models import nurseryInfo, employeeInfo
+
 
 class plantTypeInfo(db.Model):
     __tablename__ = 'plantTypeInfo'

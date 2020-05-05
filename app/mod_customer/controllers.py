@@ -12,7 +12,7 @@ from app.mod_auth.controllers import check_logged_in
 from app.mod_customer.queries import get_plants_available, get_complete_plant_info, get_order_history, get_cart_items,\
                                         get_nursery_for_plant
 
-from app.mod_customer.models import plantsSold, transactionInfo, cart
+from app.mod_customer.models import plantsSold, transactionInfo, cart, complaints
 
 from app.mod_gardener.models import plantInfo, plantStatus, plantsAvailable
 
@@ -41,13 +41,16 @@ def view_plant_profile():
             if description['quantity'] == 0:
                 return redirect(url_for('customer.view_plant_profile'))
 
-            plant                         = plantInfo.query\
-                                            .join(plantsAvailable, plantInfo.pID==plantsAvailable.pID)\
-                                            .first()
+
+            plant                       = plantTypeInfo.query.filter_by(plantTypeID=plantTypeID)\
+                                            .join(plantInfo, plantTypeInfo.plantTypeID==plantInfo.plantTypeID)\
+                                                .add_columns(plantInfo.pID, plantInfo.plantStatus)\
+                                                    .join(plantsAvailable, plantsAvailable.pID == plantInfo.pID).first()
 
             plantAvailableColumn         = plantsAvailable.query.filter_by(pID=plant.pID).first()
             nID                          = description['nID']
             sellingPrice                 = description['sellingPrice']
+
             
             if 'purchase' in request.form:
                 
@@ -57,6 +60,7 @@ def view_plant_profile():
                 db.session.commit()
                 
                 db.session.add(plantsSold(transaction.transactionID, plant.pID, nID, sellingPrice))
+                plant = plantInfo.query.filter_by(pID=plant.pID).first()
                 plant.plantStatus = plantStatus.SOLD
                 db.session.delete(plantAvailableColumn)
                 db.session.commit()
@@ -120,4 +124,18 @@ def checkout_cart():
             plant.plantStatus = plantStatus.SOLD
             db.session.commit()
         
+    return redirect(url_for('landing.index'))
+
+@mod_customer.route('/file_complaint', methods=['POST'])
+def file_complaint():
+    if check_logged_in(0):
+        userID      = session['user_id']
+        nID         = int(request.form.get('nID'))
+        pID         = int(request.form.get('id'))
+        description = request.form.get('description')
+
+        if complaints.query.filter_by(pID=pID).first() == None or complaints.query.filter_by(pID=pID).first().complaintStatus == 1:
+            db.session.add(complaints(userID, pID, nID, description))
+            db.session.commit()
+        return redirect(url_for('customer.view_order_history'))
     return redirect(url_for('landing.index'))

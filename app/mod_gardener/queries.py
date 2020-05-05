@@ -134,22 +134,24 @@ def get_stats_for_status_comparison(gardnerID):
 
     for plant_id in plant_ids:
         plant = plantInfo.query.filter_by(pID=plant_id.pID).first()
+        plantType = plantTypeInfo.query.filter_by(plantTypeID=plant.plantTypeID).first()
+        
         try:
-            index['growing'][plant.plantTypeID]
-            index['grown'][plant.plantTypeID]
-            index['sold'][plant.plantTypeID]
+            index['growing'][plantType.plantTypeName]
+            index['grown'][plantType.plantTypeName]
+            index['sold'][plantType.plantTypeName]
         except:
-            index['growing'][plant.plantTypeID] = 0
-            index['grown'][plant.plantTypeID] = 0
-            index['sold'][plant.plantTypeID] = 0
+            index['growing'][plantType.plantTypeName] = 0
+            index['grown'][plantType.plantTypeName] = 0
+            index['sold'][plantType.plantTypeName] = 0
         
     
         if plant.plantStatus == plantStatus.GROWING:
-            index['growing'][plant.plantTypeID] += 1
+            index['growing'][plantType.plantTypeName] += 1
         elif plant.plantStatus == plantStatus.GROWN:
-            index['grown'][plant.plantTypeID] += 1
+            index['grown'][plantType.plantTypeName] += 1
         elif plant.plantStatus == plantStatus.SOLD:
-            index['sold'][plant.plantTypeID] += 1
+            index['sold'][plantType.plantTypeName] += 1
 
     a = pd.DataFrame(index)
     fig = a.plot.bar(rot=0).get_figure()

@@ -38,6 +38,7 @@
                 ('manager.view_gardeners', 'View Gardeners'),
                 ('manager.add_vendor', 'Add Vendor'),
                 ('manager.view_stats', 'View Stats'),
+                ('manager.view_active_complaints', 'Active Complaints'),
                 ('auth.signout', 'Signout')
                 ] %}
             {% set home_url = "/" %}
@@ -364,8 +365,7 @@
                                         </p> 
                                     </div>
                                     <div class="card-footer">
-                                        <input type="number" name={{plant['id']}} placeholder="Cost per 1000 seeds">
-                                        <a href="#" class="btn btn-danger">Go somewhere</a>  
+                                        <input type="number" name={{plant['id']}} placeholder="Cost per 1000 seeds"> 
                                     </div>
                                 </div>
                             </div>
@@ -598,13 +598,44 @@
                                 </p> 
                             </div>
                             <div class="card-footer">
-                                <a href="#" class="btn btn-danger">File Complaint</a>
+                                <button id="modalActivate" type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#fileComplaint{{ order['id'] }}" >File Complaint</button>
                             </div>
                         </div>
 
                     </div>
                 </div>
             </div>
+
+            <!-- Modal -->
+            <form action="{{ url_for('customer.file_complaint')  }}" method="post">
+                <div class="modal fade right" id="fileComplaint{{ order['id'] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-dark" id="exampleModalPreviewLabel">Complaint</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body btn-block">
+                                <label>Describe Your Issue:</label>
+                                <input type="number" value="{{ order['id'] }}" style="visibility: hidden;" name="id"> <br>
+                                <input type="numver" value="{{ order['nID'] }}" style="visibility: hidden;" name="nID"><br>
+                                <textarea name="description"  cols="30" rows="10"></textarea>
+                                <br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <a href="#" class="btn">
+                                <button type="submit" class="btn btn-success">Complain</button>
+                            </a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </form>
+            <!-- Modal ends -->
+
         {% endif %}
     {% endfor %}
 {% endmacro %}
@@ -646,3 +677,44 @@
     {% endfor %}
 {% endmacro %}
 <!-- Macro for cart ends -->
+
+<!-- Macro for active complaints -->
+{% macro render_active_complaints(complaints) %}
+    {% for complaint in complaints %}
+        {% if loop.length != 0 %}
+            <div class ="card-deck">
+                <div class = "card text-white bg bg-dark mb-3">
+                    <div class="row no-gutters">
+                        <div class ="col-md-4">
+                            <img src ="{{ complaint['image'] }}" class="card-img" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-header">
+                                <h3>{{complaint['name']|title()}}</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    Plant ID: {{ complaint['pID'] }} <br>
+                                    Gardener ID: {{ complaint['gardenerID'] }} <br>
+                                    Gardener Name: {{ complaint['gardenerName'] }} <br>
+                                    Description: {{ complaint['description'] }} <br>
+                                    Date: {{ complaint['date'] }} <br>
+                                </p> 
+                            </div>
+                            <div class="card-footer">
+                                <form action="{{ url_for('manager.view_active_complaints') }}" method="post">
+                                    <input type="number" name="complaintNumber" value="{{ complaint['complaintNumber'] }}" style="visibility: hidden;"> <br>
+                                    <button type="submit" class="btn btn-primary">Resolve</button>
+                                </form>
+                                    
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+<!-- macro for active complaints ends -->

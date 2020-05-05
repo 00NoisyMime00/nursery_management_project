@@ -54,3 +54,27 @@ class cart(db.Model):
     def __repr__(self):
 
         return '<customer-{cid} plant-{pid}>'.format(cid=self.customerID, pid=self.pID)
+
+
+class complaints(db.Model):
+    __tablemname__ = 'complaints'
+
+    complaintNumber = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    userID          = db.Column(db.Integer, db.ForeignKey(User.id))
+    pID             = db.Column(db.Integer, db.ForeignKey(plantInfo.pID), primary_key=True)
+    nID             = db.Column(db.Integer, db.ForeignKey(nurseryInfo.nID))
+    complaintStatus = db.Column(db.Integer, nullable=False, default=0) # 0 - active, 1 - resolved
+    date            = db.Column(db.DateTime,  default=db.func.current_timestamp())
+    description     = db.Column(db.String(500), nullable=False)
+
+    def __init__(self, userID, pID, nID, description):
+
+        self.userID      = userID
+        self.pID         = pID
+        self.nID         = nID
+        self.description = description
+
+    def __repr__(self):
+
+        return '<complaint id-{cid} plant-{pid} nursery-{nid} description-{d}>'\
+                .format(cid=self.complaintNumber, pid=self.pID, nid=self.nID, d=self.description)

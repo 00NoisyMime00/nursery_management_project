@@ -23,7 +23,8 @@ from app.mod_manager.models import plantTypeInfo, plantImages, plantTypeDescript
 
 from app.mod_gardener.models import seedTypeInfo, seedBatchInfo, seedAvailable, vendorInfo, vendorSeedInfo, plantInfo, plantStatus
 
-from app.mod_manager.queries import get_gardeners, get_vendors, get_stats_for_selling_price, get_stats_for_seed_available
+from app.mod_manager.queries import get_gardeners, get_vendors, get_stats_for_selling_price, get_stats_for_seed_available,\
+                                        get_active_complaints, resolve_complaint
 
 from app.mod_gardener.queries import get_complete_plant_description
 
@@ -350,6 +351,21 @@ def rate_gardener():
                 db.session.add(employeeRating(employee.id, score))
                 db.session.commit()
     
+    return redirect(url_for('landing.index'))
+
+@mod_manager.route('/view_active_complaints', methods=['GET', 'POST'])
+def view_active_complaints():
+    if check_logged_in(2):
+        nID = nurseryStaff.query.filter_by(eID=session['user_id']).first()
+        if nID != None:
+            nID = nID.nID
+
+            if request.method == 'POST':
+                complaintNumber = int(request.form.get('complaintNumber'))
+                active_complaint = resolve_complaint(complaintNumber)
+                
+            active_complaints = get_active_complaints(nID)
+            return render_template('manager/view_active_complaints.html', role=str(session['role']), complaints=active_complaints)
     return redirect(url_for('landing.index'))
 
 
